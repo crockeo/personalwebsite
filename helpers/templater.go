@@ -59,5 +59,3 @@ func SendPage(w io.Writer, name string, data struct{}) error {
 
 	return nil
 }
-
-func Nothing() { }
