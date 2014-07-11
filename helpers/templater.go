@@ -13,7 +13,7 @@ const (
 // The Page type (for injecting data)
 type Page struct {
 	Name string
-	Data struct{}
+	Data interface{}
 }
 
 // Loading a template safely (just by name)
@@ -40,7 +40,7 @@ func loadFooter() *template.Template { return LoadTemplateUnsafe(FooterName) }
 
 // Sending a file with the header and
 // footer templates included
-func SendPage(w io.Writer, name string, data struct{}) error {
+func SendPage(w io.Writer, name string, data interface{}) error {
 	page, err := LoadTemplate(name)
 
 	if err != nil {
