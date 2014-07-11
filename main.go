@@ -1,7 +1,7 @@
 package main
 
-import "fmt"
+import "github.com/crockeo/personalwebsite/handlers"
 
 func main() {
-	fmt.Println("Nothing to see here (yet!)")
+	handlers.InitHandlersAndStart()
 }
