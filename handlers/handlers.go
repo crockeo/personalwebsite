@@ -22,8 +22,9 @@ func InitHandlersAndStart() {
 	fmt.Println("Starting server on:", ConnectionString())
 
 	// Adding all of the handlers
-	http.HandleFunc("/", HomeHandler)
+	http.HandleFunc("/static/", StaticHandler)
+	http.HandleFunc("/"       , HomeHandler)
 
 	// Starting the server
-	http.ListenAndServe(ConnectionString(), http.FileServer(http.Dir("static/")))
+	http.ListenAndServe(ConnectionString(), nil)
 }
