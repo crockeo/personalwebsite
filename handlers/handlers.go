@@ -25,5 +25,5 @@ func InitHandlersAndStart() {
 	http.HandleFunc("/", HomeHandler)
 
 	// Starting the server
-	http.ListenAndServe(ConnectionString(), nil)
+	http.ListenAndServe(ConnectionString(), http.FileServer(http.Dir("static/")))
 }
