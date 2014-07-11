@@ -6,5 +6,9 @@ import (
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	helpers.SendPage(w, "home", struct{}{})
+	iserr := Check404(w, r, r.URL.Path)
+
+	if !iserr {
+		helpers.SendPage(w, "home", struct{}{})
+	}
 }
