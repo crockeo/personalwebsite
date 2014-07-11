@@ -1,0 +1,4 @@
+# Ignoring compiled files
+*.exe
+*.dll
+*.sl
