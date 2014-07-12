@@ -27,5 +27,5 @@ func InitHandlersAndStart() {
 	http.HandleFunc("/"       , HomeHandler)
 
 	// Starting the server
-	http.ListenAndServe(ConnectionString(), nil)
+	http.ListenAndServe(":80", nil)
 }
