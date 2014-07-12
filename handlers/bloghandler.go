@@ -13,7 +13,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 		posts, err := blog.LoadPosts("posts")
 
 		if err != nil {
-			ErrorHandler(w, r, 503)
+			helpers.SendPage(w, "noblog", struct{}{})
 		} else {
 			helpers.SendPage(w, "blog", struct{ Posts []blog.Post }{ Posts: posts })
 		}
