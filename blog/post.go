@@ -2,10 +2,12 @@ package blog
 
 import (
 	"time"
+	"strconv"
 	"strings"
 )
 
 type Post struct {
+	Id      int
 	Title   string
 	Author  string
 	Body    string
@@ -22,22 +24,24 @@ func unsafeParseTime(input string) time.Time {
 }
 
 // Creating a new time-traveled post
-func NewPostWithTime(title string, author string, body string, written time.Time) Post {
-	return Post{ Title  : title   ,
+func NewPostWithTime(id int, title string, author string, body string, written time.Time) Post {
+	return Post{ Id     : id      ,
+	             Title  : title   ,
 	             Author : author  ,
 	             Body   : body    ,
 	             Written: written }
 }
 
 // Creating a new Post
-func NewPost(title string, author string, body string) Post {
-	return NewPostWithTime(title, author, body, time.Now())
+func NewPost(id int, title string, author string, body string) Post {
+	return NewPostWithTime(id, title, author, body, time.Now())
 }
 
 // Parsing out a Post
 func ParsePost(input string) Post {
 	lines := strings.Split(input, "\n")
 
+	id      := 0
 	title   := ""
 	author  := ""
 	body    := ""
@@ -48,6 +52,11 @@ func ParsePost(input string) Post {
 
 		if len(liness) == 2 {
 			switch liness[0] {
+			case "id":
+				tid, err := strconv.ParseInt(liness[1], 10, 64)
+				if err == nil {
+					id = int(tid)
+				}
 			case "tit":
 				title = liness[1]
 			case "aut":
@@ -55,17 +64,21 @@ func ParsePost(input string) Post {
 			case "bod":
 				body = liness[1]
 			case "wri":
-				written = unsafeParseTime(liness[1])
+				twritten, err := time.Parse(liness[1], liness[1])
+				if err == nil {
+					written = twritten
+				}
 			}
 		}
 	}
 
-	return NewPostWithTime(title, author, body, written)
+	return NewPostWithTime(id, title, author, body, written)
 }
 
 // Showing a Post (converting it to a string)
 func (post Post) Show() string {
-	return "tit" + " " + post.Title               + "\n" +
+	return "id"  + " " + string(post.Id)          + "\n" +
+	       "tit" + " " + post.Title               + "\n" +
 	       "aut" + " " + post.Author              + "\n" +
 	       "bod" + " " + ParseMarkdown(post.Body) + "\n" +
 	       "wri" + " " + post.Written.String()

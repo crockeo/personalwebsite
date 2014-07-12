@@ -10,7 +10,7 @@ func LoadPost(path string) (Post, error) {
 	val, err := ioutil.ReadFile(path)
 
 	if err != nil {
-		return NewPost("", "", ""), err
+		return NewPost(0, "", "", ""), err
 	}
 
 	return ParsePost(string(val)), nil
