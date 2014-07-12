@@ -77,9 +77,9 @@ func ParsePost(input string) Post {
 
 // Showing a Post (converting it to a string)
 func (post Post) Show() string {
-	return "id"  + " " + string(post.Id)          + "\n" +
-	       "tit" + " " + post.Title               + "\n" +
-	       "aut" + " " + post.Author              + "\n" +
-	       "bod" + " " + ParseMarkdown(post.Body) + "\n" +
+	return "id"  + " " + strconv.FormatInt(int64(post.Id), 10) + "\n" +
+	       "tit" + " " + post.Title                            + "\n" +
+	       "aut" + " " + post.Author                           + "\n" +
+	       "bod" + " " + ParseMarkdown(post.Body)              + "\n" +
 	       "wri" + " " + post.Written.String()
 }
