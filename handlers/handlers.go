@@ -1,25 +1,13 @@
 package handlers
 
 import (
+	"os"
 	"fmt"
 	"net/http"
 )
 
-const (
-	Ip   string = "cerekhillen.herokuapp.com"
-	Port string = "80"
-)
-
-// Converting the Ip and Port variables into
-// the actual string
-func ConnectionString() string {
-	return Ip + ":" + Port
-}
-
 // Initializing an starting the server
 func InitHandlersAndStart() {
-	// Alerting the user that the server is starting
-	fmt.Println("Starting server on:", ConnectionString())
 
 	// Adding all of the handlers
 	http.HandleFunc("/static/", StaticHandler)
@@ -27,5 +15,13 @@ func InitHandlersAndStart() {
 	http.HandleFunc("/"       , HomeHandler)
 
 	// Starting the server
-	http.ListenAndServe(":80", nil)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8000"
+	}
+
+	// Alerting the user that the server is starting
+	fmt.Println("Starting server on port:", port)
+
+	http.ListenAndServe(":" + port, nil)
 }

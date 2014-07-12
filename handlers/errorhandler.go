@@ -23,5 +23,5 @@ func ErrorHandler(w http.ResponseWriter, r *http.Request, status int) {
 	path := r.URL.Path
 
 	w.WriteHeader(status)
-	helpers.SendPage(w, "error", Error { ErrorCode: status, Path: ConnectionString() + path })
+	helpers.SendPage(w, "error", Error { ErrorCode: status, Path: path })
 }
