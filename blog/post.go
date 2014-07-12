@@ -3,7 +3,6 @@ package blog
 import (
 	"time"
 	"strings"
-	"io/ioutil"
 )
 
 type Post struct {
@@ -62,17 +61,6 @@ func ParsePost(input string) Post {
 	}
 
 	return NewPostWithTime(title, author, body, written)
-}
-
-// Loading a Post from a file
-func LoadPost(path string) (Post, error) {
-	val, err := ioutil.ReadFile(path)
-
-	if err != nil {
-		return NewPost("", "", ""), err
-	}
-
-	return ParsePost(string(val)), nil
 }
 
 // Showing a Post (converting it to a string)
