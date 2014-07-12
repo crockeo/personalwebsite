@@ -7,7 +7,7 @@ import (
 
 const (
 	Ip   string = "localhost"
-	Port string = "8000"
+	Port string = "80"
 )
 
 // Converting the Ip and Port variables into
