@@ -1,0 +1,10 @@
+{{range .Data.Posts}}
+	<div class="col-md-8 col-md-offset-2">
+		<h2><a href="/blog/{{.Id}}">{{.Title}}</a></h2>
+		<h3><small>By {{.Author}}</small></h3>
+
+		<p class="text-justify">{{.Body}}</p>
+
+		<p class="footer">{{.Written}}</p>
+	</div>
+{{end}}

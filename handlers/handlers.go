@@ -23,6 +23,7 @@ func InitHandlersAndStart() {
 
 	// Adding all of the handlers
 	http.HandleFunc("/static/", StaticHandler)
+	http.HandleFunc("/blog/"  , BlogHandler)
 	http.HandleFunc("/"       , HomeHandler)
 
 	// Starting the server
