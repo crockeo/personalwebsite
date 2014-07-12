@@ -2,6 +2,7 @@ package blog
 
 import (
 	"os"
+	"strings"
 	"io/ioutil"
 )
 
@@ -14,6 +15,24 @@ func LoadPost(path string) (Post, error) {
 	}
 
 	return ParsePost(string(val)), nil
+}
+
+// Loading a splice of Posts
+func LoadPosts(path string) ([]Post, error) {
+	val, err := ioutil.ReadFile(path)
+
+	if err != nil {
+		return []Post{}, err
+	}
+
+	uposts := strings.Split(string(val), "spl\n")
+	posts  := make([]Post, len(uposts))
+
+	for i := 0; i < len(uposts); i++ {
+		posts[i] = ParsePost(uposts[i])
+	}
+
+	return posts, nil
 }
 
 // Saving a Post to a file
