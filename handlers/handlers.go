@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	Ip   string = "localhost"
+	Ip   string = "cerekhillen.herokuapp.com"
 	Port string = "80"
 )
 
