@@ -2,3 +2,6 @@
 *.exe
 *.dll
 *.sl
+
+# The data/config folder
+data/
