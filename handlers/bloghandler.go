@@ -4,20 +4,21 @@ import (
 	"github.com/crockeo/personalwebsite/blog"
 	"github.com/crockeo/personalwebsite/helpers"
 	"net/http"
-	"net/http/cookiejar"
 )
 
 // Making a new post
 func NewPostHandler(w http.ResponseWriter, r *http.Request) {
-	jar, err := cookiejar.New(nil)
+	cookie, err := r.Cookie("login")
 
 	if err != nil {
-		ErrorHandler(w, r, 503)
+		helpers.SendPage(w, "notlogged", struct{}{})
 	} else {
-		cookies := jar.Cookies(r.URL)
+		auth, err := blog.LoadDefaultAuth()
 
-		if len(cookies) == 0 || cookies[0] == nil {
-			ErrorHandler(w, r, 0)
+		if err != nil {
+			ErrorHandler(w, r, 503)
+		} else if cookie.Value != auth.String() {
+			helpers.SendPage(w, "invalidlogin", struct{}{})
 		} else {
 			helpers.SendPage(w, "newpost", struct{}{})
 		}
