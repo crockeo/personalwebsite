@@ -80,7 +80,7 @@ func ParsePost(input string) *Post {
 }
 
 // Showing a Post (converting it to a string)
-func (post *Post) Show() string {
+func (post *Post) String() string {
 	return "id" + " " + strconv.FormatInt(int64(post.Id), 10) + "\n" +
 		"tit" + " " + post.Title + "\n" +
 		"aut" + " " + post.Author + "\n" +
