@@ -3,8 +3,31 @@ package handlers
 import (
 	"github.com/crockeo/personalwebsite/blog"
 	"github.com/crockeo/personalwebsite/helpers"
+	"html/template"
 	"net/http"
+	"time"
 )
+
+// A DisplayPost type
+type DisplayPost struct {
+	Id      int
+	Title   string
+	Author  string
+	Body    template.HTML
+	Written time.Time
+}
+
+func toDisplayPost(post *blog.Post) *DisplayPost {
+	dp := new(DisplayPost)
+
+	dp.Id = post.Id
+	dp.Title = post.Title
+	dp.Author = post.Author
+	dp.Body = template.HTML(post.Body)
+	dp.Written = post.Written
+
+	return dp
+}
 
 // Making a new post
 func NewPostHandler(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +63,12 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 		if posts == nil || err != nil {
 			helpers.SendPage(w, "noblog", struct{}{})
 		} else {
-			helpers.SendPage(w, "blog", struct{ Posts []*blog.Post }{Posts: posts})
+			displayposts := make([]*DisplayPost, len(posts))
+			for i := 0; i < len(posts); i++ {
+				displayposts[i] = toDisplayPost(posts[i])
+			}
+
+			helpers.SendPage(w, "blog", struct{ Posts []*DisplayPost }{Posts: displayposts})
 		}
 	}
 }
