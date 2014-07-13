@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"net/http"
 	"github.com/crockeo/personalwebsite/helpers"
+	"net/http"
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {

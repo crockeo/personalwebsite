@@ -1,9 +1,9 @@
 package blog
 
 import (
-	"time"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type Post struct {
@@ -25,11 +25,11 @@ func unsafeParseTime(input string) time.Time {
 
 // Creating a new time-traveled post
 func NewPostWithTime(id int, title string, author string, body string, written time.Time) Post {
-	return Post{ Id     : id      ,
-	             Title  : title   ,
-	             Author : author  ,
-	             Body   : body    ,
-	             Written: written }
+	return Post{Id: id,
+		Title:   title,
+		Author:  author,
+		Body:    body,
+		Written: written}
 }
 
 // Creating a new Post
@@ -41,10 +41,10 @@ func NewPost(id int, title string, author string, body string) Post {
 func ParsePost(input string) Post {
 	lines := strings.Split(input, "\n")
 
-	id      := 0
-	title   := ""
-	author  := ""
-	body    := ""
+	id := 0
+	title := ""
+	author := ""
+	body := ""
 	written := time.Now()
 
 	for index := 0; index < len(lines); index++ {
@@ -77,9 +77,9 @@ func ParsePost(input string) Post {
 
 // Showing a Post (converting it to a string)
 func (post Post) Show() string {
-	return "id"  + " " + strconv.FormatInt(int64(post.Id), 10) + "\n" +
-	       "tit" + " " + post.Title                            + "\n" +
-	       "aut" + " " + post.Author                           + "\n" +
-	       "bod" + " " + ParseMarkdown(post.Body)              + "\n" +
-	       "wri" + " " + post.Written.String()
+	return "id" + " " + strconv.FormatInt(int64(post.Id), 10) + "\n" +
+		"tit" + " " + post.Title + "\n" +
+		"aut" + " " + post.Author + "\n" +
+		"bod" + " " + ParseMarkdown(post.Body) + "\n" +
+		"wri" + " " + post.Written.String()
 }

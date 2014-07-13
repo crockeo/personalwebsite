@@ -1,8 +1,8 @@
 package helpers
 
 import (
-	"io"
 	"html/template"
+	"io"
 )
 
 const (
@@ -50,11 +50,11 @@ func SendPage(w io.Writer, name string, data interface{}) error {
 	header := loadHeader()
 	footer := loadFooter()
 
-	v := Page { Name: name ,
-	            Data: data }
+	v := Page{Name: name,
+		Data: data}
 
 	header.Execute(w, v)
-	page  .Execute(w, v)
+	page.Execute(w, v)
 	footer.Execute(w, v)
 
 	return nil

@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"net/http"
 	"github.com/crockeo/personalwebsite/helpers"
+	"net/http"
 )
 
 type Error struct {
@@ -23,5 +23,5 @@ func ErrorHandler(w http.ResponseWriter, r *http.Request, status int) {
 	path := r.URL.Path
 
 	w.WriteHeader(status)
-	helpers.SendPage(w, "error", Error { ErrorCode: status, Path: path })
+	helpers.SendPage(w, "error", Error{ErrorCode: status, Path: path})
 }

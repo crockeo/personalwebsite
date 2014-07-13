@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"net/http"
 	"github.com/crockeo/personalwebsite/blog"
 	"github.com/crockeo/personalwebsite/helpers"
+	"net/http"
 )
 
 func BlogHandler(w http.ResponseWriter, r *http.Request) {
@@ -15,7 +15,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			helpers.SendPage(w, "noblog", struct{}{})
 		} else {
-			helpers.SendPage(w, "blog", struct{ Posts []blog.Post }{ Posts: posts })
+			helpers.SendPage(w, "blog", struct{ Posts []blog.Post }{Posts: posts})
 		}
 	}
 }

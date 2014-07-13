@@ -1,9 +1,9 @@
 package blog
 
 import (
+	"io/ioutil"
 	"os"
 	"strings"
-	"io/ioutil"
 )
 
 // Loading a Post from a file
@@ -26,7 +26,7 @@ func LoadPosts(path string) ([]Post, error) {
 	}
 
 	uposts := strings.Split(string(val), "spl\n")
-	posts  := make([]Post, len(uposts))
+	posts := make([]Post, len(uposts))
 
 	for i := 0; i < len(uposts); i++ {
 		posts[i] = ParsePost(uposts[i])
