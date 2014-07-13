@@ -30,7 +30,8 @@ func NewPostWithTime(id int, title string, author string, body string, written t
 	post.Id = id
 	post.Title = title
 	post.Author = author
-	post.Body = body
+	post.Body = ParseMarkdown(body)
+	post.Body = post.Body[0 : len(post.Body)-1]
 	post.Written = written
 
 	return post
@@ -84,6 +85,6 @@ func (post *Post) String() string {
 	return "id" + " " + strconv.FormatInt(int64(post.Id), 10) + "\n" +
 		"tit" + " " + post.Title + "\n" +
 		"aut" + " " + post.Author + "\n" +
-		"bod" + " " + ParseMarkdown(post.Body) + "\n" +
+		"bod" + " " + post.Body + "\n" +
 		"wri" + " " + post.Written.String()
 }
