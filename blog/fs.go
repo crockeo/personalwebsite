@@ -44,7 +44,7 @@ func LoadDefaultPosts() ([]*Post, error) {
 // Creating a Posts file
 func CreatePostsFile(path string) error {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return ioutil.WriteFile(path, []byte(""), os.ModeExclusive)
+		return ioutil.WriteFile(path, []byte(""), 0664)
 	}
 
 	return nil
@@ -54,7 +54,7 @@ func CreatePostsFile(path string) error {
 func CreateDefaultPostsFile() error { return CreatePostsFile(config.PostsLoc) }
 
 // Appending a Posts file
-func AppendPostsFile(path string, post Post) error {
+func AppendPostsFile(path string, post *Post) error {
 	err := CreatePostsFile(path)
 
 	if err != nil {
@@ -67,4 +67,4 @@ func AppendPostsFile(path string, post Post) error {
 }
 
 // Appending the default Posts file
-func AppendDefaultPostsFile(post Post) error { return AppendPostsFile(config.PostsLoc, post) }
+func AppendDefaultPostsFile(post *Post) error { return AppendPostsFile(config.PostsLoc, post) }
