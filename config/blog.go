@@ -1,6 +1,6 @@
 package config
 
 const (
-	AuthLoc  = InDir("auth")  // Authorization for the blog
-	PostsLoc = InDir("posts") // File that contains every post
+	AuthLoc  = DataDirectory + "auth"  // Authorization for the blog
+	PostsLoc = DataDirectory + "posts" // File that contains every post
 )

@@ -1,6 +1,7 @@
 package blog
 
 import (
+	"github.com/crockeo/personalwebsite/config"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -37,7 +38,7 @@ func LoadPosts(path string) ([]*Post, error) {
 
 // Loading the default Posts
 func LoadDefaultPosts() ([]*Post, error) {
-	return LoadPosts(BlogPosts)
+	return LoadPosts(config.PostsLoc)
 }
 
 // Saving a Post to a file

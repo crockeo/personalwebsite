@@ -1,6 +1,7 @@
 package blog
 
 import (
+	"github.com/crockeo/personalwebsite/config"
 	"io/ioutil"
 	"strings"
 )
@@ -34,7 +35,7 @@ func LoadAuth(path string) (*Auth, error) {
 
 // Loading the default Auth
 func LoadDefaultAuth() (*Auth, error) {
-	return LoadAuth(AuthLoc)
+	return LoadAuth(config.AuthLoc)
 }
 
 // Checking if two Auths are equal
