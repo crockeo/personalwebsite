@@ -41,8 +41,30 @@ func LoadDefaultPosts() ([]*Post, error) {
 	return LoadPosts(config.PostsLoc)
 }
 
-// Saving a Post to a file
-func SavePost(post Post, path string) error {
-	err := ioutil.WriteFile(path, []byte(post.Show()), os.ModeExclusive)
+// Creating a Posts file
+func CreatePostsFile(path string) error {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return ioutil.WriteFile(path, []byte(""), os.ModeExclusive)
+	}
+
+	return nil
+}
+
+// Creating the default Posts file
+func CreateDefaultPostsFile() error { return CreatePostsFile(config.PostsLoc) }
+
+// Appending a Posts file
+func AppendPostsFile(path string, post Post) error {
+	err := CreatePostsFile(path)
+
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(path, []byte(post.String()), os.ModeAppend)
+
 	return err
 }
+
+// Appending the default Posts file
+func AppendDefaultPostsFile(post Post) error { return AppendPostsFile(config.PostsLoc, post) }
