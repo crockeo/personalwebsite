@@ -36,7 +36,7 @@ func LoadPosts(path string) ([]*Post, error) {
 }
 
 // Loading the default Posts
-func LoadDefautlPosts() ([]*Post, error) {
+func LoadDefaultPosts() ([]*Post, error) {
 	return LoadPosts(BlogPosts)
 }
 
