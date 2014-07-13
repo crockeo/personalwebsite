@@ -7,32 +7,37 @@ import (
 )
 
 // Loading a Post from a file
-func LoadPost(path string) (Post, error) {
+func LoadPost(path string) (*Post, error) {
 	val, err := ioutil.ReadFile(path)
 
 	if err != nil {
-		return NewPost(0, "", "", ""), err
+		return nil, err
 	}
 
 	return ParsePost(string(val)), nil
 }
 
 // Loading a splice of Posts
-func LoadPosts(path string) ([]Post, error) {
+func LoadPosts(path string) ([]*Post, error) {
 	val, err := ioutil.ReadFile(path)
 
 	if err != nil {
-		return []Post{}, err
+		return []*Post{}, err
 	}
 
 	uposts := strings.Split(string(val), "spl\n")
-	posts := make([]Post, len(uposts))
+	posts := make([]*Post, len(uposts))
 
 	for i := 0; i < len(uposts); i++ {
 		posts[i] = ParsePost(uposts[i])
 	}
 
 	return posts, nil
+}
+
+// Loading the default Posts
+func LoadDefautlPosts() ([]*Post, error) {
+	return LoadPosts(BlogPosts)
 }
 
 // Saving a Post to a file

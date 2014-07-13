@@ -24,21 +24,25 @@ func unsafeParseTime(input string) time.Time {
 }
 
 // Creating a new time-traveled post
-func NewPostWithTime(id int, title string, author string, body string, written time.Time) Post {
-	return Post{Id: id,
-		Title:   title,
-		Author:  author,
-		Body:    body,
-		Written: written}
+func NewPostWithTime(id int, title string, author string, body string, written time.Time) *Post {
+	post := new(Post)
+
+	post.Id = id
+	post.Title = title
+	post.Author = author
+	post.Body = body
+	post.Written = written
+
+	return post
 }
 
 // Creating a new Post
-func NewPost(id int, title string, author string, body string) Post {
+func NewPost(id int, title string, author string, body string) *Post {
 	return NewPostWithTime(id, title, author, body, time.Now())
 }
 
 // Parsing out a Post
-func ParsePost(input string) Post {
+func ParsePost(input string) *Post {
 	lines := strings.Split(input, "\n")
 
 	id := 0
@@ -76,7 +80,7 @@ func ParsePost(input string) Post {
 }
 
 // Showing a Post (converting it to a string)
-func (post Post) Show() string {
+func (post *Post) Show() string {
 	return "id" + " " + strconv.FormatInt(int64(post.Id), 10) + "\n" +
 		"tit" + " " + post.Title + "\n" +
 		"aut" + " " + post.Author + "\n" +
