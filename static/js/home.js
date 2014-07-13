@@ -1,7 +1,9 @@
+var withCaret = function(input) { return input + '<b class="caret"></b>'; }
+
 var switchToggleName = function(index, oldhtml) {
-	if      (oldhtml == 'Hide') return 'Show';
-	else if (oldhtml == 'Show') return 'Hide';
-	else                        return 'Error';
+	if      (oldhtml == withCaret('Hide')) return withCaret('Show');
+	else if (oldhtml == withCaret('Show')) return withCaret('Hide');
+	else                                   return 'Error';
 };
 
 $('document').ready(function () {
