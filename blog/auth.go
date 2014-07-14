@@ -11,6 +11,16 @@ type Auth struct {
 	Password string
 }
 
+// Creating a new Auth
+func NewAuth(username string, password string) *Auth {
+	auth := new(Auth)
+
+	auth.Username = username
+	auth.Password = password
+
+	return auth
+}
+
 // Loading an Auth from a file
 func LoadAuth(path string) (*Auth, error) {
 	val, err := ioutil.ReadFile(path)
@@ -19,17 +29,13 @@ func LoadAuth(path string) (*Auth, error) {
 		return nil, err
 	}
 
-	vals := strings.Split(string(val), "\n")
+	val = val[0 : len(val)-1]
+	vals := strings.Split(string(val), "|")
 
 	if len(vals) != 2 {
 		return nil, nil
 	} else {
-		auth := new(Auth)
-
-		auth.Username = vals[0]
-		auth.Password = vals[1]
-
-		return auth, nil
+		return NewAuth(vals[0], vals[1]), nil
 	}
 }
 
@@ -46,5 +52,5 @@ func (auth *Auth) Equal(auth2 *Auth) bool {
 
 // Converting an Auth to a string
 func (auth *Auth) String() string {
-	return auth.Username + "\n" + auth.Password
+	return auth.Username + "|" + auth.Password
 }
