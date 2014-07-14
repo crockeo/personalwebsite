@@ -31,26 +31,21 @@ func toDisplayPost(post *blog.Post) *DisplayPost {
 
 // Making a new post
 func NewPostHandler(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("login")
+	title := r.FormValue("title")
+	author := r.FormValue("author")
+	body := r.FormValue("body")
 
-	if err != nil {
-		helpers.SendPage(w, "notlogged", struct{}{})
+	if title != "" && author != "" && body != "" {
+		blog.SavePostNext(blog.NewPost(title, author, body))
+		http.Redirect(w, r, "/blog/", 301)
 	} else {
-		auth, err := blog.LoadDefaultAuth()
-
-		if err != nil {
-			ErrorHandler(w, r, 503)
-		} else if cookie.Value != auth.String() {
-			helpers.SendPage(w, "invalidlogin", struct{}{})
-		} else {
-			helpers.SendPage(w, "newpost", struct{}{})
-		}
+		helpers.SendPage(w, "newpost", struct{}{})
 	}
 }
 
 // Authenticating to the blog
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	helpers.SendPage(w, "login", struct{}{})
+	ErrorHandler(w, r, 404)
 }
 
 // The blog display itself

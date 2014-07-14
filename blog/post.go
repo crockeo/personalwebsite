@@ -14,17 +14,8 @@ type Post struct {
 	Written time.Time
 }
 
-// Unsafely parsing the time
-func unsafeParseTime(input string) time.Time {
-	t, e := time.Parse(input, input)
-	if e != nil {
-		panic(e)
-	}
-	return t
-}
-
-// Creating a new time-traveled post
-func NewPostWithTime(id int, title string, author string, body string, written time.Time) *Post {
+// Creating a new Post (all args)
+func NewPostRaw(id int, title string, author string, body string, written time.Time) *Post {
 	post := new(Post)
 
 	post.Id = id
@@ -37,9 +28,9 @@ func NewPostWithTime(id int, title string, author string, body string, written t
 	return post
 }
 
-// Creating a new Post
-func NewPost(id int, title string, author string, body string) *Post {
-	return NewPostWithTime(id, title, author, body, time.Now())
+// Creating a new Post (streamlined)
+func NewPost(title string, author string, body string) *Post {
+	return NewPostRaw(Posts(), title, author, body, time.Now())
 }
 
 // Parsing out a Post
@@ -69,7 +60,7 @@ func ParsePost(input string) *Post {
 			case "bod":
 				body = liness[1]
 			case "wri":
-				twritten, err := time.Parse(liness[1], liness[1])
+				twritten, err := time.Parse(time.UnixDate, liness[1])
 				if err == nil {
 					written = twritten
 				}
@@ -77,7 +68,7 @@ func ParsePost(input string) *Post {
 		}
 	}
 
-	return NewPostWithTime(id, title, author, body, written)
+	return NewPostRaw(id, title, author, body, written)
 }
 
 // Showing a Post (converting it to a string)
@@ -86,5 +77,5 @@ func (post *Post) String() string {
 		"tit" + " " + post.Title + "\n" +
 		"aut" + " " + post.Author + "\n" +
 		"bod" + " " + post.Body + "\n" +
-		"wri" + " " + post.Written.String()
+		"wri" + " " + post.Written.Format(time.UnixDate)
 }
