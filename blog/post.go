@@ -13,7 +13,8 @@ func MakePostRaw(id int, title string, author string, body string, written time.
 		<h2>
 			<a href="/blog/` + strconv.FormatInt(int64(id), 10) + `">` + title + `</a>
 			<br>
-			<small>By ` + author + `</h2>
+			<small>By ` + author + `</small>
+		</h2>
 
 		<div class="text-justify">
 			` + ParseMarkdown(body) + `
