@@ -1,1 +1,26 @@
-<h1 class="text-center">New Post Placeholder</h1>
+<h1 class="text-center">New Post</h1>
+
+<div class="col-md-6 col-md-offset-3">
+	<hr>
+
+	<form method="post" action="/blog/new/" role="form">
+		<div class="form-group col-md-6">
+			<label class="control-label" for="titleInput">Title</label>
+			<input id="titleInput" class="form-control" type="text" name="title" placeholder="Enter Title" required>
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="authorInput">Author</label>
+			<input id="authorInput" class="form-control" type="text" name="author" placeholder="Enter author" required>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label" for="bodyInput">Body</label>
+			<textarea id="bodyInput" class="form-control" rows="8" name="body" placeholder="Enter body" required></textarea>
+		</div>
+
+		<div class="form-group">
+			<button class="btn btn-default" type="submit">Submit</body>
+		</div>
+	</form>
+</div>
