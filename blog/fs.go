@@ -52,7 +52,7 @@ func Posts() int {
 // Saving a Post to the next available index
 func SavePostNext(post *Post) error {
 	posts := Posts()
-	err := SavePost(posts+1, post)
+	err := SavePost(posts, post)
 	if err != nil {
 		return err
 	}
