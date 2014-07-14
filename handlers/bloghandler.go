@@ -58,7 +58,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	iserr := Check404(w, r, r.URL.Path[5:])
 
 	if !iserr {
-		posts, err := blog.LoadDefaultPosts()
+		posts, err := blog.LoadPosts()
 
 		if posts == nil || err != nil {
 			helpers.SendPage(w, "noblog", struct{}{})

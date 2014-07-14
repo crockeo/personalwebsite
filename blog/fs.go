@@ -3,12 +3,11 @@ package blog
 import (
 	"github.com/crockeo/personalwebsite/config"
 	"io/ioutil"
-	"os"
-	"strings"
+	"strconv"
 )
 
 // Loading a Post from a file
-func LoadPost(path string) (*Post, error) {
+func LoadPostRaw(path string) (*Post, error) {
 	val, err := ioutil.ReadFile(path)
 
 	if err != nil {
@@ -18,53 +17,56 @@ func LoadPost(path string) (*Post, error) {
 	return ParsePost(string(val)), nil
 }
 
-// Loading a splice of Posts
-func LoadPosts(path string) ([]*Post, error) {
-	val, err := ioutil.ReadFile(path)
+// Loading a Post from index
+func LoadPost(index int) (*Post, error) {
+	return LoadPostRaw(config.PostsDir + config.PostName + strconv.FormatInt(int64(index), 10))
+}
+
+// Loading the nubmer of Posts
+func Posts() int {
+	val, err := ioutil.ReadFile(config.PostIndexLoc)
 
 	if err != nil {
-		return []*Post{}, err
+		return 0
 	}
 
-	uposts := strings.Split(string(val), "spl\n")
-	posts := make([]*Post, len(uposts))
-
-	for i := 0; i < len(uposts); i++ {
-		posts[i] = ParsePost(uposts[i])
-	}
-
-	return posts, nil
-}
-
-// Loading the default Posts
-func LoadDefaultPosts() ([]*Post, error) {
-	return LoadPosts(config.PostsLoc)
-}
-
-// Creating a Posts file
-func CreatePostsFile(path string) error {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return ioutil.WriteFile(path, []byte(""), 0664)
-	}
-
-	return nil
-}
-
-// Creating the default Posts file
-func CreateDefaultPostsFile() error { return CreatePostsFile(config.PostsLoc) }
-
-// Appending a Posts file
-func AppendPostsFile(path string, post *Post) error {
-	err := CreatePostsFile(path)
+	ret, err := strconv.ParseInt(string(val), 10, 64)
 
 	if err != nil {
-		return err
+		return 0
 	}
 
-	err = ioutil.WriteFile(path, []byte(post.String()), os.ModeAppend)
-
-	return err
+	return int(ret)
 }
 
-// Appending the default Posts file
-func AppendDefaultPostsFile(post *Post) error { return AppendPostsFile(config.PostsLoc, post) }
+// Writing the number of Posts
+func SetPosts(num int) error {
+	return ioutil.WriteFile(config.PostIndexLoc, []byte(strconv.FormatInt(int64(num), 10)), 664)
+}
+
+// Incrementing the nubmer of Posts that exist
+func IncPosts() error {
+	return SetPosts(Posts() + 1)
+}
+
+// Loading every post
+func LoadPosts() ([]*Post, error) {
+	nposts := Posts()
+
+	if nposts == 0 {
+		return nil, nil
+	} else {
+		posts := make([]*Post, nposts)
+		for i := 0; i < nposts; i++ {
+			post, err := LoadPost(i)
+
+			if err != nil {
+				return nil, err
+			}
+
+			posts[i] = post
+		}
+
+		return posts, nil
+	}
+}
