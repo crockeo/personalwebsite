@@ -29,7 +29,10 @@ func LoadAuth(path string) (*Auth, error) {
 		return nil, err
 	}
 
-	val = val[0 : len(val)-1]
+	if val[len(val)] == '\n' {
+		val = val[0 : len(val)-1]
+	}
+
 	vals := strings.Split(string(val), "|")
 
 	if len(vals) != 2 {
