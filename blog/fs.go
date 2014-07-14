@@ -17,9 +17,19 @@ func LoadPostRaw(path string) (*Post, error) {
 	return ParsePost(string(val)), nil
 }
 
+// Writing a Post to a file
+func SavePostRaw(path string, post *Post) error {
+	return ioutil.WriteFile(path, []byte(post.String()), 664)
+}
+
 // Loading a Post from index
 func LoadPost(index int) (*Post, error) {
 	return LoadPostRaw(config.PostsDir + config.PostName + strconv.FormatInt(int64(index), 10))
+}
+
+// Saving a Post to an index
+func SavePost(index int, post *Post) error {
+	return SavePostRaw(config.PostsDir+config.PostName+strconv.FormatInt(int64(index), 10), post)
 }
 
 // Loading the nubmer of Posts
@@ -37,6 +47,17 @@ func Posts() int {
 	}
 
 	return int(ret)
+}
+
+// Saving a Post to the next available index
+func SavePostNext(post *Post) error {
+	posts := Posts()
+	err := SavePost(posts+1, post)
+	if err != nil {
+		return err
+	}
+
+	return SetPosts(posts + 1)
 }
 
 // Writing the number of Posts
