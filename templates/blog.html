@@ -1,12 +1,5 @@
+<h2 class="text-center">Blog</h2>
+
 {{range .Data.Posts}}
-	<div class="col-md-8 col-md-offset-2">
-		<h2><a href="/blog/{{.Id}}">{{.Title}}</a></h2>
-		<h3><small>By {{.Author}}</small></h3>
-
-		<div class="text-justify">
-			{{.Body}}
-		</div>
-
-		<p class="footer">{{.Written}}</p>
-	</div>
+	{{.}}
 {{end}}

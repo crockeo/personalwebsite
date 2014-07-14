@@ -5,29 +5,7 @@ import (
 	"github.com/crockeo/personalwebsite/helpers"
 	"html/template"
 	"net/http"
-	"time"
 )
-
-// A DisplayPost type
-type DisplayPost struct {
-	Id      int
-	Title   string
-	Author  string
-	Body    template.HTML
-	Written time.Time
-}
-
-func toDisplayPost(post *blog.Post) *DisplayPost {
-	dp := new(DisplayPost)
-
-	dp.Id = post.Id
-	dp.Title = post.Title
-	dp.Author = post.Author
-	dp.Body = template.HTML(post.Body)
-	dp.Written = post.Written
-
-	return dp
-}
 
 // Making a new post
 func NewPostHandler(w http.ResponseWriter, r *http.Request) {
@@ -36,7 +14,7 @@ func NewPostHandler(w http.ResponseWriter, r *http.Request) {
 	body := r.FormValue("body")
 
 	if title != "" && author != "" && body != "" {
-		blog.SavePostNext(blog.NewPost(title, author, body))
+		blog.SavePostNext(blog.MakePost(title, author, body))
 		http.Redirect(w, r, "/blog/", 301)
 	} else {
 		helpers.SendPage(w, "newpost", struct{}{})
@@ -58,12 +36,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 		if posts == nil || err != nil {
 			helpers.SendPage(w, "noblog", struct{}{})
 		} else {
-			displayposts := make([]*DisplayPost, len(posts))
-			for i := 0; i < len(posts); i++ {
-				displayposts[i] = toDisplayPost(posts[i])
-			}
-
-			helpers.SendPage(w, "blog", struct{ Posts []*DisplayPost }{Posts: displayposts})
+			helpers.SendPage(w, "blog", struct{ Posts []template.HTML }{Posts: posts})
 		}
 	}
 }

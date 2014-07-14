@@ -1,81 +1,29 @@
 package blog
 
 import (
+	"html/template"
 	"strconv"
-	"strings"
 	"time"
 )
 
-type Post struct {
-	Id      int
-	Title   string
-	Author  string
-	Body    string
-	Written time.Time
+// Making a Post from the title, author, and string
+func MakePostRaw(id int, title string, author string, body string, written time.Time) template.HTML {
+	return template.HTML(`
+	<div class="col-md-8 col-md-offset-2">
+		<h2>
+			<a href="/blog/` + strconv.FormatInt(int64(id), 10) + `">` + title + `</a>
+			<br>
+			<small>By ` + author + `</h2>
+
+		<div class="text-justify">
+			` + ParseMarkdown(body) + `
+		</div>
+
+		<h4><small>` + written.Format(time.UnixDate) + `</small></h4>
+	</div>`)
 }
 
-// Creating a new Post (all args)
-func NewPostRaw(id int, title string, author string, body string, written time.Time) *Post {
-	post := new(Post)
-
-	post.Id = id
-	post.Title = title
-	post.Author = author
-	post.Body = ParseMarkdown(body)
-	post.Body = post.Body[0 : len(post.Body)-1]
-	post.Written = written
-
-	return post
-}
-
-// Creating a new Post (streamlined)
-func NewPost(title string, author string, body string) *Post {
-	return NewPostRaw(Posts(), title, author, body, time.Now())
-}
-
-// Parsing out a Post
-func ParsePost(input string) *Post {
-	lines := strings.Split(input, "\n")
-
-	id := 0
-	title := ""
-	author := ""
-	body := ""
-	written := time.Now()
-
-	for index := 0; index < len(lines); index++ {
-		liness := strings.SplitN(lines[index], " ", 2)
-
-		if len(liness) == 2 {
-			switch liness[0] {
-			case "id":
-				tid, err := strconv.ParseInt(liness[1], 10, 64)
-				if err == nil {
-					id = int(tid)
-				}
-			case "tit":
-				title = liness[1]
-			case "aut":
-				author = liness[1]
-			case "bod":
-				body = liness[1]
-			case "wri":
-				twritten, err := time.Parse(time.UnixDate, liness[1])
-				if err == nil {
-					written = twritten
-				}
-			}
-		}
-	}
-
-	return NewPostRaw(id, title, author, body, written)
-}
-
-// Showing a Post (converting it to a string)
-func (post *Post) String() string {
-	return "id" + " " + strconv.FormatInt(int64(post.Id), 10) + "\n" +
-		"tit" + " " + post.Title + "\n" +
-		"aut" + " " + post.Author + "\n" +
-		"bod" + " " + post.Body + "\n" +
-		"wri" + " " + post.Written.Format(time.UnixDate)
+// Making a Post with time being now
+func MakePost(title string, author string, body string) template.HTML {
+	return MakePostRaw(Posts(), title, author, body, time.Now())
 }

@@ -2,37 +2,38 @@ package blog
 
 import (
 	"github.com/crockeo/personalwebsite/config"
+	"html/template"
 	"io/ioutil"
 	"strconv"
 )
 
 // Loading a Post from a file
-func LoadPostRaw(path string) (*Post, error) {
+func LoadPostRaw(path string) (template.HTML, error) {
 	val, err := ioutil.ReadFile(path)
 
 	if err != nil {
-		return nil, err
+		return template.HTML(""), err
 	}
 
-	return ParsePost(string(val)), nil
+	return template.HTML(val), nil
 }
 
-// Writing a Post to a file
-func SavePostRaw(path string, post *Post) error {
-	return ioutil.WriteFile(path, []byte(post.String()), 664)
+// Saving a Post to a file
+func SavePostRaw(path string, post template.HTML) error {
+	return ioutil.WriteFile(path, []byte(post), 0664)
 }
 
-// Loading a Post from index
-func LoadPost(index int) (*Post, error) {
+// Loading a Post from an index
+func LoadPost(index int) (template.HTML, error) {
 	return LoadPostRaw(config.PostsDir + config.PostName + strconv.FormatInt(int64(index), 10))
 }
 
 // Saving a Post to an index
-func SavePost(index int, post *Post) error {
+func SavePost(index int, post template.HTML) error {
 	return SavePostRaw(config.PostsDir+config.PostName+strconv.FormatInt(int64(index), 10), post)
 }
 
-// Loading the nubmer of Posts
+// Getting the number of Posts that exist
 func Posts() int {
 	val, err := ioutil.ReadFile(config.PostIndexLoc)
 
@@ -49,8 +50,13 @@ func Posts() int {
 	return int(ret)
 }
 
-// Saving a Post to the next available index
-func SavePostNext(post *Post) error {
+// Setting the number of Posts
+func SetPosts(num int) error {
+	return ioutil.WriteFile(config.PostIndexLoc, []byte(strconv.FormatInt(int64(num), 10)), 0644)
+}
+
+// Saving the next Post
+func SavePostNext(post template.HTML) error {
 	posts := Posts()
 	err := SavePost(posts, post)
 	if err != nil {
@@ -60,24 +66,14 @@ func SavePostNext(post *Post) error {
 	return SetPosts(posts + 1)
 }
 
-// Writing the number of Posts
-func SetPosts(num int) error {
-	return ioutil.WriteFile(config.PostIndexLoc, []byte(strconv.FormatInt(int64(num), 10)), 664)
-}
-
-// Incrementing the nubmer of Posts that exist
-func IncPosts() error {
-	return SetPosts(Posts() + 1)
-}
-
 // Loading every post
-func LoadPosts() ([]*Post, error) {
+func LoadPosts() ([]template.HTML, error) {
 	nposts := Posts()
 
 	if nposts == 0 {
 		return nil, nil
 	} else {
-		posts := make([]*Post, nposts)
+		posts := make([]template.HTML, nposts)
 		for i := 0; i < nposts; i++ {
 			post, err := LoadPost(i)
 
