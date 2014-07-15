@@ -74,6 +74,7 @@ func LoadPosts() ([]template.HTML, error) {
 		return nil, nil
 	} else {
 		posts := make([]template.HTML, nposts)
+		indx := nposts - 1
 		for i := 0; i < nposts; i++ {
 			post, err := LoadPost(i)
 
@@ -81,7 +82,8 @@ func LoadPosts() ([]template.HTML, error) {
 				return nil, err
 			}
 
-			posts[i] = post
+			posts[indx] = post
+			indx--
 		}
 
 		return posts, nil
