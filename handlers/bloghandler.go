@@ -37,7 +37,6 @@ func postHandler(w http.ResponseWriter, r *http.Request, num int) {
 		if err != nil {
 			ErrorHandler(w, r, 503)
 		} else {
-			spost := SPost{post}
 			helpers.SendPage(w, "post", struct{ Post template.HTML }{Post: post})
 		}
 	} else {
