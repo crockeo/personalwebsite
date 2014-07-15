@@ -1,5 +1,16 @@
 {
 	"ImportPath": "github.com/crockeo/personalwebsite",
 	"GoVersion": "go1.2.1",
-	"Deps": []
+	"Deps": [
+		{
+			"ImportPath": "code.google.com/p/go.net/html",
+			"Comment": "null-137",
+			"Rev": "335bcad0b70a3ba61b9951992a418c9176a73fd4"
+		},
+		{
+			"ImportPath": "github.com/russross/blackfriday",
+			"Comment": "v1.1-132-gc7617b0",
+			"Rev": "c7617b05ad8da2825e1b2d311622bf3472101624"
+		}
+	]
 }
