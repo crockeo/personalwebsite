@@ -1,11 +1,11 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/crockeo/personalwebsite/admin"
 	"github.com/crockeo/personalwebsite/config"
 	"github.com/crockeo/personalwebsite/helpers"
 	"net/http"
-	"fmt"
 )
 
 // The handler to deal with logging into the admin account
@@ -35,39 +35,39 @@ func AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
 
 // Updating admin information
 func AdminUpdateHandler(w http.ResponseWriter, r *http.Request) {
-        cauth, err := r.Cookie(config.AuthName)
-        
-        if err != nil {
-                http.Redirect(w, r, "/admin/", 301)
-        } else {
-                auth, err := admin.LoadDefaultAuth()
-                
-                if err != nil {
-                        ErrorHandler(w, r, 503)
-                } else if auth.String() == cauth.Value {
-                        newusername := r.FormValue("newusername")
-                        newpassword := r.FormValue("newpassword")
-                        cnewpassword := r.FormValue("cnewpassword")
-                        oldpassword := r.FormValue("oldpassword")
-                        
-                        if newusername != "" && newpassword != "" && cnewpassword != "" && oldpassword != "" {
-                                if oldpassword != auth.Password {
-                                        http.Redirect(w, r, "/admin/nono/", 301)
-                                } else {
-                                        fmt.Println("RRAWR")
-                                        helpers.SendPage(w, r, "admin", struct{}{})
-                                }
-                        }
-                } else {
-                        http.Redirect(w, r, "/admin/nono/", 301)
-                }
-        }
+	cauth, err := r.Cookie(config.AuthName)
+
+	if err != nil {
+		http.Redirect(w, r, "/admin/", 301)
+	} else {
+		auth, err := admin.LoadDefaultAuth()
+
+		if err != nil {
+			ErrorHandler(w, r, 503)
+		} else if auth.String() == cauth.Value {
+			newusername := r.FormValue("newusername")
+			newpassword := r.FormValue("newpassword")
+			cnewpassword := r.FormValue("cnewpassword")
+			oldpassword := r.FormValue("oldpassword")
+
+			if newusername != "" && newpassword != "" && cnewpassword != "" && oldpassword != "" {
+				if oldpassword != auth.Password {
+					http.Redirect(w, r, "/admin/nono/", 301)
+				} else {
+					fmt.Println("RRAWR")
+					helpers.SendPage(w, r, "admin", struct{}{})
+				}
+			}
+		} else {
+			http.Redirect(w, r, "/admin/nono/", 301)
+		}
+	}
 }
 
 // Serving the no-no page
 func AdminNonoHandler(w http.ResponseWriter, r *http.Request) {
-        w.WriteHeader(503)
-        helpers.SendPage(w, "nono", struct{}{})
+	w.WriteHeader(503)
+	helpers.SendPage(w, "nono", struct{}{})
 }
 
 // The base admin handler
