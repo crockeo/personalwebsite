@@ -12,6 +12,9 @@ func InitHandlersAndStart() {
 	// Adding all of the handlers
 	http.HandleFunc("/static/", StaticHandler)
 	http.HandleFunc("/blog/", BlogHandler)
+	http.HandleFunc("/admin/login/", AdminLoginHandler)
+	http.HandleFunc("/admin/logout/", AdminLogoutHandler)
+	http.HandleFunc("/admin/", AdminHandler)
 	http.HandleFunc("/", HomeHandler)
 
 	// Starting the server
