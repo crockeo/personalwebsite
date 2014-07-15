@@ -22,15 +22,15 @@ func exists(path string) bool {
 
 // Functions initialize the project structure
 func PreRunInit() {
-	os.Mkdir(config.DataDirectory, 775)
-	os.Mkdir(config.PostsDir, 775)
+	os.Mkdir(config.DataDirectory, 0775)
+	os.Mkdir(config.PostsDir, 0775)
 
 	if !exists(config.AuthLoc) {
-		ioutil.WriteFile(config.AuthLoc, []byte(defaultAuth), 664)
+		ioutil.WriteFile(config.AuthLoc, []byte(defaultAuth), 0664)
 	}
 
 	if !exists(config.PostIndexLoc) {
-		ioutil.WriteFile(config.PostIndexLoc, []byte("0"), 664)
+		ioutil.WriteFile(config.PostIndexLoc, []byte("0"), 0664)
 	}
 }
 
