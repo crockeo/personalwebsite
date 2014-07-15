@@ -2,6 +2,10 @@ html {
 	overflow-y: scroll;
 }
 
+.maincontainer {
+	padding: 25px;
+}
+
 .toprow {
 	background: #333;
 	box-shadow: 0px 0px 8px #000;
