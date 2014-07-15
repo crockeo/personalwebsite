@@ -24,3 +24,9 @@ func MakeAuthCookie(auth Auth) *http.Cookie {
 		Raw:      config.AuthName + "=" + auth.String(),
 		Unparsed: []string{config.AuthName + "=" + auth.String()}}
 }
+
+// Making the delete version of a cookie
+func ToDelete(cook *http.Cookie) *http.Cookie {
+	cook.MaxAge = 0
+	return cook
+}
