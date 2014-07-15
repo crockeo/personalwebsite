@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"errors"
 	"github.com/crockeo/personalwebsite/config"
 	"io/ioutil"
 	"strings"
@@ -24,14 +25,14 @@ func LoadAuth(path string) (Auth, error) {
 		return NewAuth("", ""), err
 	}
 
-	if val[len(val)] == '\n' {
+	if val[len(val) - 1] == '\n' {
 		val = val[0 : len(val)-1]
 	}
 
 	vals := strings.Split(string(val), "|")
 
 	if len(vals) != 2 {
-		return NewAuth("", ""), nil
+		return NewAuth("", ""), errors.New("Could not parse auth file")
 	} else {
 		return NewAuth(vals[0], vals[1]), nil
 	}
