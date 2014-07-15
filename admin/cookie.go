@@ -8,18 +8,14 @@ import (
 
 // Making an authorizarion cookie
 func MakeAuthCookie(auth Auth) *http.Cookie {
-	exp := time.Now().Add(2 * 24 * time.Hour)
 
 	return &http.Cookie{
-		Name:       config.AuthName,
-		Value:      auth.String(),
-		Path:       "/",
-		Domain:     "",
-		Expires:    exp,
-		RawExpires: exp.Format(time.UnixDate),
+		Name:   config.AuthName,
+		Value:  auth.String(),
+		Path:   "/",
+		Domain: "",
 
-		MaxAge:   2 * 24 * 60 * 60,
-		Secure:   true,
+		Secure:   false,
 		HttpOnly: true,
 		Raw:      config.AuthName + "=" + auth.String(),
 		Unparsed: []string{config.AuthName + "=" + auth.String()}}
