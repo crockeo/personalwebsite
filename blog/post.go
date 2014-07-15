@@ -10,11 +10,13 @@ import (
 func MakePostRaw(id int, title string, author string, body string, written time.Time) template.HTML {
 	return template.HTML(`
 	<div class="col-md-8 col-md-offset-2">
-		<h2>
+		<h2 class="text-center">
 			<a href="/blog/` + strconv.FormatInt(int64(id), 10) + `">` + title + `</a>
-			<br>
-			<small>By ` + author + `</small>
 		</h2>
+
+		<h4 class="text-center">
+			<small>` + author + `</small>
+		</h4>
 
 		<div class="text-justify">
 			` + ParseMarkdown(body) + `
