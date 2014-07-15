@@ -18,6 +18,12 @@ $('document').ready(function () {
 		$('#skills').slideToggle();
 	});
 
+	$('#contactToggle').click(function () {
+		$('#contactToggle').html(switchToggleName);
+		$('#contact').slideToggle();
+	});
+
 	$('#bio').toggle();
 	$('#skills').toggle();
+	$('#contact').toggle();
 });
