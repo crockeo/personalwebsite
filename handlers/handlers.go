@@ -13,7 +13,8 @@ func InitHandlersAndStart() {
 	http.HandleFunc("/static/", StaticHandler)
 	http.HandleFunc("/blog/", BlogHandler)
 	http.HandleFunc("/admin/login/", AdminLoginHandler)
-	http.HandleFunc("/admin/logout/", AdminLogoutHandler)
+	http.HandleFunc("/admin/update/", AdminUpdateHandler)
+	http.HandleFunc("/admin/nono/", AdminNonoHandler)
 	http.HandleFunc("/admin/", AdminHandler)
 	http.HandleFunc("/", HomeHandler)
 
