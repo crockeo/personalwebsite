@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/crockeo/personalwebsite/config"
 	"net/http"
 	"time"
 )
@@ -11,7 +12,7 @@ func MakeAuthCookie(auth Auth) *http.Cookie {
 
 	exp := time.Now().Add(2 * 24 * time.Hour)
 
-	cook.Name = "login"
+	cook.Name = config.AuthName
 	cook.Value = auth.String()
 	cook.Path = "/"
 	cook.Domain = "127.0.0.1"
