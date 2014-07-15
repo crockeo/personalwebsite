@@ -8,25 +8,6 @@ import (
 	"strconv"
 )
 
-// Making a new post
-func NewPostHandler(w http.ResponseWriter, r *http.Request) {
-	title := r.FormValue("title")
-	author := r.FormValue("author")
-	body := r.FormValue("body")
-
-	if title != "" && author != "" && body != "" {
-		blog.SavePostNext(blog.MakePost(title, author, body))
-		http.Redirect(w, r, "/blog/", 301)
-	} else {
-		helpers.SendPage(w, "newpost", struct{}{})
-	}
-}
-
-// Authenticating to the blog
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	ErrorHandler(w, r, 404)
-}
-
 // Displaying a single blogpost
 func postHandler(w http.ResponseWriter, r *http.Request, num int) {
 	nposts := blog.Posts()

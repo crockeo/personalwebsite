@@ -11,8 +11,6 @@ func InitHandlersAndStart() {
 
 	// Adding all of the handlers
 	http.HandleFunc("/static/", StaticHandler)
-	http.HandleFunc("/blog/new/", NewPostHandler)
-	http.HandleFunc("/blog/admin/", LoginHandler)
 	http.HandleFunc("/blog/", BlogHandler)
 	http.HandleFunc("/", HomeHandler)
 
