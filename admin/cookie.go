@@ -14,7 +14,7 @@ func MakeAuthCookie(auth Auth) *http.Cookie {
 		Name:       config.AuthName,
 		Value:      auth.String(),
 		Path:       "/",
-		Domain:     "localhost",
+		Domain:     "",
 		Expires:    exp,
 		RawExpires: exp.Format(time.UnixDate),
 
@@ -27,6 +27,11 @@ func MakeAuthCookie(auth Auth) *http.Cookie {
 
 // Making the delete version of a cookie
 func ToDelete(cook *http.Cookie) *http.Cookie {
+	exp := time.Now()
+
+	cook.Expires = exp
+	cook.RawExpires = exp.Format(time.UnixDate)
 	cook.MaxAge = 0
+
 	return cook
 }
