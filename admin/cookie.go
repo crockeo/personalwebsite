@@ -16,7 +16,8 @@ func MakeAuthCookie(auth Auth) *http.Cookie {
 		Secure:   false,
 		HttpOnly: true,
 		Raw:      config.AuthName + "=" + auth.String(),
-		Unparsed: []string{config.AuthName + "=" + auth.String()}}
+		Unparsed: []string{config.AuthName + "=" + auth.String()},
+	}
 }
 
 // Sending an auth cookie
