@@ -25,7 +25,7 @@ func LoadAuth(path string) (Auth, error) {
 		return NewAuth("", ""), err
 	}
 
-	if val[len(val) - 1] == '\n' {
+	if val[len(val)-1] == '\n' {
 		val = val[0 : len(val)-1]
 	}
 
@@ -38,9 +38,19 @@ func LoadAuth(path string) (Auth, error) {
 	}
 }
 
+// Saving an Auth to a file
+func SaveAuth(path string, auth Auth) error {
+	return ioutil.WriteFile(path, []byte(auth.String()), 0664)
+}
+
 // Loading the default Auth
 func LoadDefaultAuth() (Auth, error) {
 	return LoadAuth(config.AuthLoc)
+}
+
+// Changing the default Auth
+func SaveDefaultAuth(auth Auth) error {
+	return SaveAuth(config.AuthLoc, auth)
 }
 
 // Checking if two Auths are equal
