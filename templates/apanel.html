@@ -1,1 +1,31 @@
-<h2 class="text-center">Admin Panel Placeholder</h2>
+<h2 class="text-center">Admin Panel</h2>
+
+<h3 class="text-center">
+	<a href="/admin/new/">Make a New Blogpost</a>
+</h3>
+
+<div class="row">
+	<form class="col-md-6 col-md-offset-3" method="post" action="/admin/update/" role="form">
+		<div class="form-group">
+			<label class="control-label" for="newusernameInput">New Username</label>
+			<input id="newusernameInput" class="form-control" type="text" name="newusername" placeholder="Enter new username" required>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label" for="newpasswordInput">New Password</label>
+			<input id="newpasswordInput" class="form-control" type="password" name="newpassword" placeholder="Enter new password" required>
+		</div>
+
+		<div class="form-group">
+			<!-- NEW PASSWORD !-->
+		</div>
+
+		<div class="form-group">
+			<!-- CURRENT PASSWORD !-->
+		</div>
+
+		<div class="form-group">
+			<button class="btn btn-default" type="submit">Submit</button>
+		</div>
+	</form>
+</div>
