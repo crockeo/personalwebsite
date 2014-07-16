@@ -93,7 +93,7 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 			} else if auth.String() == cauth.Value {
 				helpers.SendPage(w, "apanel", struct{}{})
 			} else {
-				helpers.SendPage(w, "home", struct{}{})
+				http.Redirect(w, r, "/admin/nono/", 301)
 			}
 		}
 	}
