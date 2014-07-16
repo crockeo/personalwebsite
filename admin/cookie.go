@@ -3,12 +3,10 @@ package admin
 import (
 	"github.com/crockeo/personalwebsite/config"
 	"net/http"
-	"time"
 )
 
 // Making an authorizarion cookie
 func MakeAuthCookie(auth Auth) *http.Cookie {
-
 	return &http.Cookie{
 		Name:   config.AuthName,
 		Value:  auth.String(),
@@ -21,13 +19,7 @@ func MakeAuthCookie(auth Auth) *http.Cookie {
 		Unparsed: []string{config.AuthName + "=" + auth.String()}}
 }
 
-// Making the delete version of a cookie
-func ToDelete(cook *http.Cookie) *http.Cookie {
-	exp := time.Now()
-
-	cook.Expires = exp
-	cook.RawExpires = exp.Format(time.UnixDate)
-	cook.MaxAge = 0
-
-	return cook
+// Sending an auth cookie
+func SendAuthCookie(w http.ResponseWriter, auth Auth) {
+	http.SetCookie(w, MakeAuthCookie(auth))
 }
