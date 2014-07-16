@@ -8,7 +8,6 @@ var switchToggleName = function(index, oldhtml) {
 
 $('document').ready(function () {
 	$('#bioToggle').click(function () {
-		console.log($('#bioToggle').html());
 		$('#bioToggle').html(switchToggleName);
 		$('#bio').slideToggle();
 	});
