@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/crockeo/personalwebsite/blog"
+	"github.com/crockeo/personalwebsite/database"
 	"github.com/crockeo/personalwebsite/helpers"
 	"html/template"
 	"net/http"
@@ -10,19 +10,21 @@ import (
 
 // Displaying a single blogpost
 func postHandler(w http.ResponseWriter, r *http.Request, num int) {
-	nposts := blog.Posts()
+	db, err := database.OpenDefaultDatabase()
 
-	if num < nposts {
-		post, err := blog.LoadPost(num)
+	if err != nil {
+		ErrorHandler(w, r, 503)
+	} else {
+		post, err := database.GetPost(db, num)
 
 		if err != nil {
-			ErrorHandler(w, r, 503)
+			ErrorHandler(w, r, 404)
 		} else {
-			helpers.SendPage(w, "post", struct{ Post template.HTML }{Post: post})
+			helpers.SendPage(w, "post", struct{ Post template.HTML }{Post: post.Display()})
 		}
-	} else {
-		ErrorHandler(w, r, 404)
 	}
+
+	db.Close()
 }
 
 // The blog display itself
@@ -32,15 +34,27 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	if err == nil {
 		postHandler(w, r, int(num))
 	} else {
-		iserr := Check404(w, r, r.URL.Path[5:])
+		if !Check404(w, r, r.URL.Path[5:]) {
+			db, err := database.OpenDefaultDatabase()
 
-		if !iserr {
-			posts, err := blog.LoadPosts()
-
-			if posts == nil || err != nil {
-				helpers.SendPage(w, "noblog", struct{}{})
+			if err != nil {
+				ErrorHandler(w, r, 503)
 			} else {
-				helpers.SendPage(w, "blog", struct{ Posts []template.HTML }{Posts: posts})
+				posts, err := database.GetPosts(db)
+
+				if err != nil {
+					helpers.SendPage(w, "noblog", struct{}{})
+				} else {
+					dposts := make([]template.HTML, len(posts))
+
+					for i := 0; i < len(posts); i++ {
+						dposts[i] = posts[i].Display()
+					}
+
+					helpers.SendPage(w, "blog", struct{ Posts []template.HTML }{Posts: dposts})
+				}
+
+				db.Close()
 			}
 		}
 	}
