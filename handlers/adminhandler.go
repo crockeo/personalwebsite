@@ -59,7 +59,7 @@ func AdminNewBlogPostHandler(w http.ResponseWriter, r *http.Request) {
 
 				if err != nil {
 					ErrorHandler(w, r, 503)
-				} else if auth.String() == cauth.Value {
+				} else if auth.SecureString() == cauth.Value {
 					title := r.FormValue("title")
 					author := r.FormValue("author")
 					body := r.FormValue("body")
@@ -93,7 +93,7 @@ func AdminUpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 				if err != nil {
 					ErrorHandler(w, r, 503)
-				} else if auth.String() == cauth.Value {
+				} else if auth.SecureString() == cauth.Value {
 					newusername := r.FormValue("newusername")
 					newpassword := r.FormValue("newpassword")
 					cnewpassword := r.FormValue("cnewpassword")
@@ -146,7 +146,7 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 
 				if err != nil {
 					ErrorHandler(w, r, 503)
-				} else if auth.String() == cauth.Value {
+				} else if auth.SecureString() == cauth.Value {
 					helpers.SendPage(w, "apanel", struct{}{})
 				} else {
 					http.Redirect(w, r, "/admin/nono/", 301)

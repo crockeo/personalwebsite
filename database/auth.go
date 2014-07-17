@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/crockeo/personalwebsite/config"
+	"github.com/crockeo/personalwebsite/helpers"
 	"net/http"
 )
 
@@ -29,11 +30,16 @@ func (auth *Auth) String() string {
 	return auth.Username + "|" + auth.Password
 }
 
+// Converting the auth to a secure string
+func (auth *Auth) SecureString() string {
+	return helpers.HashString(auth.String())
+}
+
 // Making a cookie from an auth
 func (auth *Auth) MakeCookie() *http.Cookie {
 	return &http.Cookie{
 		Name:   config.AuthName,
-		Value:  auth.String(),
+		Value:  auth.SecureString(),
 		Path:   "/",
 		Domain: "",
 
