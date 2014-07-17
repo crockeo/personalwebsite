@@ -1,12 +1,10 @@
 package handlers
 
 import (
-	"github.com/crockeo/personalwebsite/admin"
-	"github.com/crockeo/personalwebsite/blog"
 	"github.com/crockeo/personalwebsite/config"
+	"github.com/crockeo/personalwebsite/database"
 	"github.com/crockeo/personalwebsite/helpers"
 	"net/http"
-	"strconv"
 )
 
 // The handler to deal with logging into the admin account
@@ -16,20 +14,28 @@ func AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
 		password := r.FormValue("password")
 
 		if username != "" && password != "" {
-			auth, err := admin.LoadDefaultAuth()
+			db, err := database.OpenDefaultDatabase()
 
 			if err != nil {
 				ErrorHandler(w, r, 503)
 			} else {
-				nauth := admin.NewAuth(username, password)
+				auth, err := database.GetAuth(db)
 
-				if auth.Equal(nauth) {
-					http.SetCookie(w, admin.MakeAuthCookie(nauth))
-					http.Redirect(w, r, "/admin/", 301)
+				if err != nil {
+					ErrorHandler(w, r, 503)
 				} else {
-					http.Redirect(w, r, "/admin/nono/", 301)
+					nauth := database.MakeNewAuth(username, password)
+
+					if auth.Equal(nauth) {
+						http.SetCookie(w, nauth.MakeCookie())
+						http.Redirect(w, r, "/admin/", 301)
+					} else {
+						http.Redirect(w, r, "/admin/nono/", 301)
+					}
 				}
 			}
+
+			db.Close()
 		} else {
 			http.Redirect(w, r, "/admin/", 301)
 		}
@@ -44,20 +50,28 @@ func AdminNewBlogPostHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Redirect(w, r, "/admin/", 301)
 		} else {
-			auth, err := admin.LoadDefaultAuth()
+			db, err := database.OpenDefaultDatabase()
 
 			if err != nil {
 				ErrorHandler(w, r, 503)
-			} else if auth.String() == cauth.Value {
-				title := r.FormValue("title")
-				author := r.FormValue("author")
-				body := r.FormValue("body")
-
-				blog.SavePostNext(blog.MakePost(title, author, body))
-				http.Redirect(w, r, "/blog/"+strconv.FormatInt(int64(blog.Posts()-1), 10), 301)
 			} else {
-				http.Redirect(w, r, "/admin/nono", 301)
+				auth, err := database.GetAuth(db)
+
+				if err != nil {
+					ErrorHandler(w, r, 503)
+				} else if auth.String() == cauth.Value {
+					title := r.FormValue("title")
+					author := r.FormValue("author")
+					body := r.FormValue("body")
+
+					database.InsertPost(db, database.MakeNewPost(title, author, body))
+					http.Redirect(w, r, "/blog/", 301)
+				} else {
+					http.Redirect(w, r, "/admin/nono/", 301)
+				}
 			}
+
+			db.Close()
 		}
 	}
 }
@@ -70,33 +84,39 @@ func AdminUpdateHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Redirect(w, r, "/admin/", 301)
 		} else {
-			auth, err := admin.LoadDefaultAuth()
+			db, err := database.OpenDefaultDatabase()
 
 			if err != nil {
 				ErrorHandler(w, r, 503)
-			} else if auth.String() == cauth.Value {
-				newusername := r.FormValue("newusername")
-				newpassword := r.FormValue("newpassword")
-				cnewpassword := r.FormValue("cnewpassword")
-				oldpassword := r.FormValue("oldpassword")
+			} else {
+				auth, err := database.GetAuth(db)
 
-				if newusername != "" && newpassword != "" && cnewpassword != "" && oldpassword != "" {
-					if oldpassword != auth.Password {
-						http.Redirect(w, r, "/admin/nono/", 301)
+				if err != nil {
+					ErrorHandler(w, r, 503)
+				} else if auth.String() == cauth.Value {
+					newusername := r.FormValue("newusername")
+					newpassword := r.FormValue("newpassword")
+					cnewpassword := r.FormValue("cnewpassword")
+					oldpassword := r.FormValue("oldpassword")
+
+					if newusername != "" && newpassword != "" && cnewpassword != "" && oldpassword != "" {
+						if oldpassword != auth.Password {
+							http.Redirect(w, r, "/admin/nono/", 301)
+						} else {
+							nauth := database.MakeNewAuth(newusername, newpassword)
+
+							database.ChangeAuth(db, nauth)
+							http.SetCookie(w, nauth.MakeCookie())
+
+							http.Redirect(w, r, "/admin/", 301)
+						}
 					} else {
-						nauth := admin.NewAuth(newusername, newpassword)
-
-						admin.SaveDefaultAuth(nauth)
-						admin.SendAuthCookie(w, nauth)
-
 						http.Redirect(w, r, "/admin/", 301)
 					}
-				} else {
-					http.Redirect(w, r, "/admin/", 301)
 				}
-			} else {
-				http.Redirect(w, r, "/admin/nono/", 301)
 			}
+
+			db.Close()
 		}
 	}
 }
@@ -117,15 +137,23 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			helpers.SendPage(w, "login", struct{}{})
 		} else {
-			auth, err := admin.LoadDefaultAuth()
+			db, err := database.OpenDefaultDatabase()
 
 			if err != nil {
 				ErrorHandler(w, r, 503)
-			} else if auth.String() == cauth.Value {
-				helpers.SendPage(w, "apanel", struct{}{})
 			} else {
-				http.Redirect(w, r, "/admin/nono/", 301)
+				auth, err := database.GetAuth(db)
+
+				if err != nil {
+					ErrorHandler(w, r, 503)
+				} else if auth.String() == cauth.Value {
+					helpers.SendPage(w, "apanel", struct{}{})
+				} else {
+					http.Redirect(w, r, "/admin/nono/", 301)
+				}
 			}
+
+			db.Close()
 		}
 	}
 }

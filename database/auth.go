@@ -2,6 +2,9 @@ package database
 
 import (
 	"database/sql"
+	"errors"
+	"github.com/crockeo/personalwebsite/config"
+	"net/http"
 )
 
 const (
@@ -16,9 +19,29 @@ type Auth struct {
 	Password string // The password for the auth
 }
 
+// Checking if an auth equals another auth
+func (auth1 *Auth) Equal(auth2 *Auth) bool {
+	return auth1.Username == auth2.Username && auth1.Password == auth2.Password
+}
+
 // Converting the auth to a string
 func (auth *Auth) String() string {
 	return auth.Username + "|" + auth.Password
+}
+
+// Making a cookie from an auth
+func (auth *Auth) MakeCookie() *http.Cookie {
+	return &http.Cookie{
+		Name:   config.AuthName,
+		Value:  auth.String(),
+		Path:   "/",
+		Domain: "",
+
+		Secure:   false,
+		HttpOnly: true,
+		Raw:      config.AuthName + "=" + auth.String(),
+		Unparsed: []string{config.AuthName + "=" + auth.String()},
+	}
 }
 
 // Making a new auth
@@ -31,11 +54,11 @@ func MakeNewAuth(username string, password string) *Auth {
 }
 
 // Getting the current auth
-func GetAuth(db *sql.DB) *Auth {
+func GetAuth(db *sql.DB) (*Auth, error) {
 	row := db.QueryRow("SELECT * FROM auth")
 
 	if row == nil {
-		return nil
+		return nil, errors.New("Authorization does not exist.")
 	}
 
 	var id int
@@ -48,7 +71,7 @@ func GetAuth(db *sql.DB) *Auth {
 		Id:       id,
 		Username: username,
 		Password: password,
-	}
+	}, nil
 }
 
 // Changing the current auth
