@@ -8,6 +8,10 @@
 			"Rev": "335bcad0b70a3ba61b9951992a418c9176a73fd4"
 		},
 		{
+			"ImportPath": "github.com/mattn/go-sqlite3",
+			"Rev": "9ac94b6fbfda6f25be5e3c17073aeed6de10428a"
+		},
+		{
 			"ImportPath": "github.com/russross/blackfriday",
 			"Comment": "v1.1-132-gc7617b0",
 			"Rev": "c7617b05ad8da2825e1b2d311622bf3472101624"
