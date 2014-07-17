@@ -31,7 +31,7 @@ func (post *Post) String() string {
 // Displaying the post for listing on the /blob/ page
 func (post *Post) Display() template.HTML {
 	return template.HTML(fmt.Sprintf(`
-	<div class="col-md-8 col-md-offset-2>
+	<div class="col-md-6 col-md-offset-3">
 		<h2 class="text-center">
 			<a class="blog-link" href="/blog/%d">%s</a>
 		</h2>
