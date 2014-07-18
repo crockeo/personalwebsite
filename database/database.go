@@ -3,24 +3,30 @@ package database
 import (
 	"database/sql"
 	"github.com/crockeo/personalwebsite/config"
+	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
+	"os"
 )
 
-// Opening a database connection
-func OpenDatabase(name string) (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", name)
+// Opening the production database connection
+func openPro(url string) (*sql.DB, error) {
+	return sql.Open("postgres", url)
+}
 
-	if err != nil {
-		db.Close()
-		return nil, err
-	}
-
-	return db, nil
+// Opening the dev database connection
+func openDev(pat string) (*sql.DB, error) {
+	return sql.Open("sqlite3", pat)
 }
 
 // Opening the default database
 func OpenDefaultDatabase() (*sql.DB, error) {
-	return OpenDatabase(config.DbLoc)
+	url := os.Getenv("DATABASE_URL")
+
+	if url == "" {
+		return openDev(config.DbLoc)
+	} else {
+		return openPro(url)
+	}
 }
 
 // Creating the database schema
