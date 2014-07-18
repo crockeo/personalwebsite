@@ -50,28 +50,32 @@ func AdminNewBlogPostHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Redirect(w, r, "/admin/", 301)
 		} else {
-			db, err := database.OpenDefaultDatabase()
+			title := r.FormValue("title")
+			author := r.FormValue("author")
+			body := r.FormValue("body")
 
-			if err != nil {
-				ErrorHandler(w, r, 503)
-			} else {
-				auth, err := database.GetAuth(db)
+			if title != "" && author != "" && body != "" {
+				db, err := database.OpenDefaultDatabase()
 
 				if err != nil {
 					ErrorHandler(w, r, 503)
-				} else if auth.SecureString() == cauth.Value {
-					title := r.FormValue("title")
-					author := r.FormValue("author")
-					body := r.FormValue("body")
-
-					database.InsertPost(db, database.MakeNewPost(title, author, body))
-					http.Redirect(w, r, "/blog/", 301)
 				} else {
-					http.Redirect(w, r, "/admin/nono/", 301)
-				}
-			}
+					auth, err := database.GetAuth(db)
 
-			db.Close()
+					if err != nil {
+						ErrorHandler(w, r, 503)
+					} else if auth.SecureString() == cauth.Value {
+						database.InsertPost(db, database.MakeNewPost(title, author, body))
+						http.Redirect(w, r, "/blog/", 301)
+					} else {
+						http.Redirect(w, r, "/admin/nono/", 301)
+					}
+				}
+
+				db.Close()
+			} else {
+				helpers.SendPage(w, "newpost", struct{}{})
+			}
 		}
 	}
 }
