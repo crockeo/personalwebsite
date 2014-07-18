@@ -1,0 +1,14 @@
+#dynamicMarkdown {
+	padding: 30px;
+	background: #fafafa;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 1px;
+	border-color: #999;
+}
+
+.preview-content {
+	font-size: 16px;
+	overflow-y: scroll;
+	max-height: 400px;
+}
