@@ -38,7 +38,7 @@ func (post *Post) Display() template.HTML {
 
 		<div class="text-justify blog-content">
 			%s
-		</p>
+		</div>
 
 		<div class="text-center blog-time">%s</div>
 	</div>
