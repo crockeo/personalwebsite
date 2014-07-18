@@ -32,17 +32,15 @@ func (post *Post) String() string {
 func (post *Post) Display() template.HTML {
 	return template.HTML(fmt.Sprintf(`
 	<div class="col-md-6 col-md-offset-3">
-		<h2 class="text-center">
-			<a class="blog-link" href="/blog/%d">%s</a>
-		</h2>
+		<div class="text-center"><a class="blog-link" href="/blog/%d">%s</a></div>
 
-		<h3 class="text-center"><small>%s</small></h3>
+		<div class="text-center blog-author">%s</div>
 
-		<p class="text-justify">
+		<div class="text-justify blog-content">
 			%s
 		</p>
 
-		<h4 class="text-center"><small>%s</small></h4>
+		<div class="text-center blog-time">%s</div>
 	</div>
 	`, post.Id, post.Title, post.Author, helpers.ParseMarkdown(post.Body), post.Written.Format(time.UnixDate)))
 }

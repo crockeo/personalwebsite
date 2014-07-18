@@ -20,7 +20,7 @@ func postHandler(w http.ResponseWriter, r *http.Request, num int) {
 		if err != nil {
 			ErrorHandler(w, r, 404)
 		} else {
-			helpers.SendPage(w, "post", struct{ Post template.HTML }{Post: post.Display()})
+			helpers.SendPage(w, "blog", struct{ Posts []template.HTML }{Posts: []template.HTML{post.Display()}})
 		}
 	}
 
@@ -42,7 +42,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 			} else {
 				posts, err := database.GetPosts(db)
 
-				if err != nil {
+				if len(posts) == 0 || err != nil {
 					helpers.SendPage(w, "noblog", struct{}{})
 				} else {
 					dposts := make([]template.HTML, len(posts))
