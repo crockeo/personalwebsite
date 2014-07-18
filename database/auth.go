@@ -8,11 +8,6 @@ import (
 	"net/http"
 )
 
-const (
-	authTableName string = "auth"
-	authTable     string = "CREATE TABLE " + authTableName + " (id INTEGER NOT NULL PRIMARY KEY, username TEXT, password TEXT)"
-)
-
 // The auth type
 type Auth struct {
 	Id       int    // The id for the auth
@@ -88,7 +83,7 @@ func ChangeAuth(db *sql.DB, auth *Auth) error {
 		return err
 	}
 
-	_, err = db.Exec("INSERT INTO auth(id, username, password) values(1, ?, ?)", auth.Username, auth.Password)
+	_, err = db.Exec("INSERT INTO auth(id, username, password) values(1, '?', '?')", auth.Username, auth.Password)
 
 	return err
 }
