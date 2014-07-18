@@ -9,6 +9,11 @@ import (
 	"time"
 )
 
+const (
+	postsTableName string = "posts"
+	postsTable     string = "CREATE TABLE " + postsTableName + " (id INTEGER NOT NULL PRIMARY KEY, title TEXT, author TEXT, body TEXT)"
+)
+
 // The post type
 type Post struct {
 	Id      int       // The ID of the post

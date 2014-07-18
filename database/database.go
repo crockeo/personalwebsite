@@ -43,7 +43,7 @@ func CreateDatabaseSchema(db *sql.DB) error {
 		rows.Close()
 		return err
 	} else if !rows.Next() {
-		_, err = db.Exec("INSERT INTO auth(username, password) values('admin', 'password')")
+		_, err = db.Exec("INSERT INTO auth(username, password) values(\"admin\", \"password\")")
 
 		if err != nil {
 			return err
