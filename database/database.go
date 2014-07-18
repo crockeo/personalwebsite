@@ -31,7 +31,7 @@ func OpenDefaultDatabase() (*sql.DB, error) {
 
 // Creating the database schema
 func CreateDatabaseSchema(db *sql.DB) error {
-	_, err := db.Exec("CREATE TABLE IF NOT EXISTS auth (id INTEGER NOT NULL PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL)")
+	_, err := db.Exec("CREATE TABLE IF NOT EXISTS auth (id SERIAL, username TEXT NOT NULL, password TEXT NOT NULL)")
 
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func CreateDatabaseSchema(db *sql.DB) error {
 		rows.Close()
 	}
 
-	_, err = db.Exec("CREATE TABLE IF NOT EXISTS posts (id INTEGER NOT NULL PRIMARY KEY, title TEXT NOT NULL, author TEXT NOT NULL, body TEXT NOT NULL, written TEXT NOT NULL)")
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS posts (id SERIAL, title TEXT NOT NULL, author TEXT NOT NULL, body TEXT NOT NULL, written TEXT NOT NULL)")
 
 	if err != nil {
 		return err
