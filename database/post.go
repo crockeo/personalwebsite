@@ -9,11 +9,6 @@ import (
 	"time"
 )
 
-const (
-	postsTableName string = "posts"
-	postsTable     string = "CREATE TABLE " + postsTableName + " (id INTEGER NOT NULL PRIMARY KEY, title TEXT, author TEXT, body TEXT)"
-)
-
 // The post type
 type Post struct {
 	Id      int       // The ID of the post
@@ -100,25 +95,13 @@ func GetPosts(db *sql.DB) ([]*Post, error) {
 
 // Getting a post based on ID
 func GetPost(db *sql.DB, id int) (*Post, error) {
-	stmt, err := db.Prepare("SELECT * FROM posts WHERE id=?")
-
-	if err != nil {
-		return nil, err
-	}
-
-	row := stmt.QueryRow(id)
-
-	if row == nil {
-		return nil, errors.New("Error: Requested post does not exist.")
-	}
-
 	var nid int
 	var title string
 	var author string
 	var body string
 	var swritten string
 
-	err = row.Scan(&nid, &title, &author, &body, &swritten)
+	err := db.QueryRow("SELECT * FROM posts WHERE id = $1", id).Scan(&nid, &title, &author, &body, &swritten)
 
 	if err != nil {
 		return nil, err
@@ -141,7 +124,7 @@ func GetPost(db *sql.DB, id int) (*Post, error) {
 
 // Getting the most recent post
 func MostRecent(db *sql.DB) (int, error) {
-	row := db.QueryRow("SELECT id FROM posts ORDER BY id DESC;")
+	row := db.QueryRow("SELECT id FROM posts ORDER BY id DESC")
 
 	if row == nil {
 		return 1, errors.New("Error: There are no posts.")
@@ -164,26 +147,13 @@ func MostRecent(db *sql.DB) (int, error) {
 func InsertPost(db *sql.DB, post *Post) error {
 	id, err := MostRecent(db)
 
+	exec := "INSERT INTO posts(id, title, author, body, written) values($1, $2, $3, $4, $5)"
+
 	if err != nil {
-		stmt, err := db.Prepare("INSERT INTO posts(id, title, author, body, written) values(1, '?', '?', '?', '?');")
-
-		if err != nil {
-			return err
-		}
-
-		_, err = stmt.Exec(post.Title, post.Author, post.Body, post.Written.Format(time.UnixDate))
-
-		return err
+		_, err = db.Exec(exec, 1, post.Title, post.Author, post.Body, post.Written.Format(time.UnixDate))
 	} else {
-		fmt.Println(id)
-		stmt, err := db.Prepare("INSERT INTO posts(id, title, author, body, written) values('?', '?', '?', '?', '?');")
-
-		if err != nil {
-			return err
-		}
-
-		_, err = stmt.Exec(id+1, post.Title, post.Author, post.Body, post.Written.Format(time.UnixDate))
-
-		return err
+		_, err = db.Exec(exec, id+1, post.Title, post.Author, post.Body, post.Written.Format(time.UnixDate))
 	}
+
+	return err
 }

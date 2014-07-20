@@ -77,16 +77,10 @@ func GetAuth(db *sql.DB) (*Auth, error) {
 
 // Changing the current auth
 func ChangeAuth(db *sql.DB, auth *Auth) error {
-	stmt, err := db.Prepare(`
+	_, err := db.Exec(`
 	DELETE FROM auth;
-	INSERT INTO auth(id, username, password) values(1, '?', '?');
-	`)
-
-	if err != nil {
-		return err
-	}
-
-	_, err = stmt.Exec(auth.Username, auth.Password)
+	INSERT INTO auth(id, username, password) values(1, $1, $2)
+	`, auth.Username, auth.Password)
 
 	return err
 }
