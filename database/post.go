@@ -139,17 +139,51 @@ func GetPost(db *sql.DB, id int) (*Post, error) {
 	}, nil
 }
 
+// Getting the most recent post
+func MostRecent(db *sql.DB) (int, error) {
+	row := db.QueryRow("SELECT id FROM posts ORDER BY id DESC")
+
+	if row == nil {
+		return 1, errors.New("Error: There are no posts.")
+	}
+
+	var id int
+
+	err := row.Scan(&id)
+
+	if err != nil {
+		return 1, err
+	}
+
+	return id, nil
+}
+
 // Inserting a post into the database (it should be noted that the ID of
 // the post is ignored, and is left to the SQL database's PRIMARY KEY
 // to auto-increment)
 func InsertPost(db *sql.DB, post *Post) error {
-	stmt, err := db.Prepare("INSERT INTO posts(title, author, body, written) values(?, ?, ?, ?)")
+	id, err := MostRecent(db)
 
 	if err != nil {
+		stmt, err := db.Prepare("INSERT INTO posts(id, title, author, body, written) values(1, ?, ?, ?, ?)")
+
+		if err != nil {
+			return err
+		}
+
+		_, err = stmt.Exec(post.Title, post.Author, post.Body, post.Written.Format(time.UnixDate))
+
+		return err
+	} else {
+		fmt.Println(id)
+		stmt, err := db.Prepare("INSERT INTO posts(id, title, author, body, written) values(?, ?, ?, ?, ?)")
+
+		if err != nil {
+			return err
+		}
+
+		_, err = stmt.Exec(id+1, post.Title, post.Author, post.Body, post.Written.Format(time.UnixDate))
+
 		return err
 	}
-
-	_, err = stmt.Exec(post.Title, post.Author, post.Body, post.Written.Format(time.UnixDate))
-
-	return err
 }
