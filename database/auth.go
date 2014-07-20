@@ -79,7 +79,7 @@ func GetAuth(db *sql.DB) (*Auth, error) {
 func ChangeAuth(db *sql.DB, auth *Auth) error {
 	stmt, err := db.Prepare(`
 	DELETE FROM auth;
-	INSERT INTO auth(id, username, password) values(1, ?, ?);
+	INSERT INTO auth(id, username, password) values(1, '?', '?');
 	`)
 
 	if err != nil {

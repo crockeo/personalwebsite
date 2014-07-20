@@ -165,7 +165,7 @@ func InsertPost(db *sql.DB, post *Post) error {
 	id, err := MostRecent(db)
 
 	if err != nil {
-		stmt, err := db.Prepare("INSERT INTO posts(id, title, author, body, written) values(1, ?, ?, ?, ?);")
+		stmt, err := db.Prepare("INSERT INTO posts(id, title, author, body, written) values(1, '?', '?', '?', '?');")
 
 		if err != nil {
 			return err
@@ -176,7 +176,7 @@ func InsertPost(db *sql.DB, post *Post) error {
 		return err
 	} else {
 		fmt.Println(id)
-		stmt, err := db.Prepare("INSERT INTO posts(id, title, author, body, written) values(?, ?, ?, ?, ?);")
+		stmt, err := db.Prepare("INSERT INTO posts(id, title, author, body, written) values('?', '?', '?', '?', '?');")
 
 		if err != nil {
 			return err
