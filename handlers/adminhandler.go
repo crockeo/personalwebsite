@@ -65,7 +65,12 @@ func AdminNewBlogPostHandler(w http.ResponseWriter, r *http.Request) {
 					if err != nil {
 						ErrorHandler(w, r, 503)
 					} else if auth.SecureString() == cauth.Value {
-						database.InsertPost(db, database.MakeNewPost(title, author, body))
+						err = database.InsertPost(db, database.MakeNewPost(title, author, body))
+
+						if err != nil {
+							panic(err)
+						}
+
 						http.Redirect(w, r, "/blog/", 301)
 					} else {
 						http.Redirect(w, r, "/admin/nono/", 301)
@@ -109,7 +114,12 @@ func AdminUpdateHandler(w http.ResponseWriter, r *http.Request) {
 						} else {
 							nauth := database.MakeNewAuth(newusername, newpassword)
 
-							database.ChangeAuth(db, nauth)
+							err = database.ChangeAuth(db, nauth)
+
+							if err != nil {
+								panic(err)
+							}
+
 							http.SetCookie(w, nauth.MakeCookie())
 
 							http.Redirect(w, r, "/admin/", 301)

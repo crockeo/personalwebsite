@@ -8,11 +8,6 @@ import (
 	"net/http"
 )
 
-const (
-	authTableName string = "auth"
-	authTable     string = "CREATE TABLE " + authTableName + " (id INTEGER NOT NULL PRIMARY KEY, username TEXT, password TEXT)"
-)
-
 // The auth type
 type Auth struct {
 	Id       int    // The id for the auth
@@ -61,7 +56,7 @@ func MakeNewAuth(username string, password string) *Auth {
 
 // Getting the current auth
 func GetAuth(db *sql.DB) (*Auth, error) {
-	row := db.QueryRow("SELECT * FROM auth")
+	row := db.QueryRow("SELECT * FROM auth;")
 
 	if row == nil {
 		return nil, errors.New("Authorization does not exist.")
@@ -82,13 +77,16 @@ func GetAuth(db *sql.DB) (*Auth, error) {
 
 // Changing the current auth
 func ChangeAuth(db *sql.DB, auth *Auth) error {
-	_, err := db.Exec("DELETE FROM auth")
+	stmt, err := db.Prepare(`
+	DELETE FROM auth;
+	INSERT INTO auth(id, username, password) values(1, ?, ?);
+	`)
 
 	if err != nil {
 		return err
 	}
 
-	_, err = db.Exec("INSERT INTO auth(id, username, password) values(1, ?, ?)", auth.Username, auth.Password)
+	_, err = stmt.Exec(auth.Username, auth.Password)
 
 	return err
 }

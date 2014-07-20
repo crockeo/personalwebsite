@@ -141,7 +141,7 @@ func GetPost(db *sql.DB, id int) (*Post, error) {
 
 // Getting the most recent post
 func MostRecent(db *sql.DB) (int, error) {
-	row := db.QueryRow("SELECT id FROM posts ORDER BY id DESC")
+	row := db.QueryRow("SELECT id FROM posts ORDER BY id DESC;")
 
 	if row == nil {
 		return 1, errors.New("Error: There are no posts.")
@@ -165,7 +165,7 @@ func InsertPost(db *sql.DB, post *Post) error {
 	id, err := MostRecent(db)
 
 	if err != nil {
-		stmt, err := db.Prepare("INSERT INTO posts(id, title, author, body, written) values(1, ?, ?, ?, ?)")
+		stmt, err := db.Prepare("INSERT INTO posts(id, title, author, body, written) values(1, ?, ?, ?, ?);")
 
 		if err != nil {
 			return err
@@ -176,7 +176,7 @@ func InsertPost(db *sql.DB, post *Post) error {
 		return err
 	} else {
 		fmt.Println(id)
-		stmt, err := db.Prepare("INSERT INTO posts(id, title, author, body, written) values(?, ?, ?, ?, ?)")
+		stmt, err := db.Prepare("INSERT INTO posts(id, title, author, body, written) values(?, ?, ?, ?, ?);")
 
 		if err != nil {
 			return err
