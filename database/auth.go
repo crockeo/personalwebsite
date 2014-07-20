@@ -88,4 +88,6 @@ func ChangeAuth(db *sql.DB, auth *Auth) error {
 	if err != nil {
 		return err
 	}
+
+	return nil
 }
