@@ -9,6 +9,12 @@ import (
 	"time"
 )
 
+func makePostTable(db *sql.DB) error {
+	_, err := db.Exec("CREATE TABLE IF NOT EXISTS posts (id INTEGER NOT NULL PRIMARY KEY, title TEXT NOT NULL, author TEXT NOT NULL, body TEXT NOT NULL, written TEXT NOT NULL)")
+
+	return err
+}
+
 // The post type
 type Post struct {
 	Id      int       // The ID of the post

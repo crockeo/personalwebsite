@@ -8,6 +8,31 @@ import (
 	"net/http"
 )
 
+func makeAuthTable(db *sql.DB) error {
+	_, err := db.Exec("CREATE TABLE IF NOT EXISTS auth (id INTEGER NOT NULL PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL)")
+
+	if err != nil {
+		return err
+	}
+
+	rows, err := db.Query("SELECT * FROM auth")
+
+	if err != nil {
+		rows.Close()
+		return err
+	} else if !rows.Next() {
+		_, err = db.Exec("INSERT INTO auth(id, username, password) values(1, 'admin', 'password')")
+
+		if err != nil {
+			return err
+		}
+	} else {
+		rows.Close()
+	}
+
+	return nil
+}
+
 // The auth type
 type Auth struct {
 	Id       int    // The id for the auth
