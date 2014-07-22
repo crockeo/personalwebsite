@@ -1,4 +1,4 @@
-package main
+package personalwebsite
 
 import (
 	"github.com/crockeo/personalwebsite/config"
@@ -25,8 +25,7 @@ func PreRunInit() {
 	db.Close()
 }
 
-// The main function
-func main() {
+func StartServer() {
 	PreRunInit()
 	handlers.InitHandlersAndStart()
 }
