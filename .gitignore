@@ -8,3 +8,6 @@ data/
 
 # Ignoring the .zedstate file (for using zed editor)
 .zedstate
+
+# The Godeps _workspace folder
+Godeps/_workspace/
