@@ -1,0 +1,59 @@
+<h2 class="text-center">Course Listings</h2>
+
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+		{{with .Data.Courses}}
+			<table class="table table-striped table-bordered text-center">
+				<thead>
+					<tr>
+						<td>Link</td>
+						<td>Course Name</td>
+						<td>Offering Institution</td>
+					</tr>
+				</thead>
+
+				<tbody>
+					{{range .}}
+						<tr>
+							<td><a href="/project/course/{{.SerTitle}}">{{.SerTitle}}</a></td>
+							<td>{{.Title}}</td>
+							<td>{{.Inst}}</td>
+						</tr>
+					{{end}}
+				</tbody>
+			</table>
+		{{else}}
+			<h4 class="text-center">No courses listed yet.</h4>	
+		{{end}}
+	</div>
+</div>
+
+<div class="row"><hr class="col-md-6 col-md-offset-3"></div>
+
+<h2 class="text-center">Project Listings</h2>
+
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+		{{with .Data.Projects}}
+			<table class="table table-striped table-bordered text-center">
+				<thead>
+					<tr>Project Name</tr>
+					<tr>Language</tr>
+					<tr>Short Description</tr>
+				</thead>
+
+				<tbody>
+					{{range .}}
+						<tr>
+							<td><a href="/project/{{.Id}}">{{.Title}}</a></td>
+							<td>{{.Language}}</td>
+							<td>{{.ShortDesc}}</td>
+						</tr>
+					{{end}}
+				</tbody>
+			</table>
+		{{else}}
+			<h4 class="text-center">No projects listed yet.</h4>
+		{{end}}
+	</div>
+</div>
