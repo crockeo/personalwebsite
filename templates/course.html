@@ -1,0 +1,28 @@
+<div class="row">
+		<h2 class="col-md-8 col-md-offset-2 text-center">
+		{{.Data.Title}}
+		<br>
+		<small>{{.Data.SerTitle}}</small>
+	</h2>
+</div>
+
+<h4 class="text-center">Taught by: {{.Data.Inst}}</h4>
+
+<h4 class="text-center">
+	<small>
+		<a href="/static/certs/{{.Data.SerTitle}}.pdf" target="_blank">Link to certificate</a>
+	</small>
+</h4>
+
+<div class="col-md-6 col-md-offset-3">
+	<hr>
+	<h4 class="text-center">Official Description</h4>
+	<p class="text-justify">
+		{{.Data.Description}}
+	</p>
+
+	<h4 class="text-center">Personal Comments</h4>
+	<p class="text-justify">
+		{{.Data.Comments}}
+	</p>
+</div>

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/crockeo/personalwebsite/database"
 	"github.com/crockeo/personalwebsite/helpers"
 	"net/http"
@@ -13,12 +14,27 @@ type projectRootData struct {
 
 // Displaying an individual course
 func ProjectCourseHandler(w http.ResponseWriter, r *http.Request) {
+	root := "/project/course/"
+	sertitle := r.URL.Path[len(root):]
 
-}
+	if sertitle == "" {
+		ErrorHandler(w, r, 404)
+	} else {
+		db, err := database.OpenDefaultDatabase()
 
-// Displaying an individual project
-func ProjectProjectHandler(w http.ResponseWriter, r *http.Request) {
+		if err != nil {
+			ErrorHandler(w, r, 503)
+		} else {
+			course, err := database.GetCourseBySerTitle(db, sertitle)
 
+			if err != nil {
+				fmt.Println(err.Error())
+				ErrorHandler(w, r, 404)
+			} else {
+				helpers.SendPage(w, "course", course)
+			}
+		}
+	}
 }
 
 // The base ProjectHandler
@@ -56,6 +72,7 @@ func ProjectHandler(w http.ResponseWriter, r *http.Request) {
 		data, err := loadProjectRootData()
 
 		if err != nil {
+			fmt.Println(err.Error())
 			ErrorHandler(w, r, 503)
 		} else {
 			helpers.SendPage(w, "projectroot", data)
