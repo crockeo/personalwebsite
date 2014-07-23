@@ -9,5 +9,9 @@ data/
 # Ignoring the .zedstate file (for using zed editor)
 .zedstate
 
+# Ignoring the gin generated bin file
+gin-bin
+gin-bin.*
+
 # The Godeps _workspace folder
 Godeps/_workspace/
