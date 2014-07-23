@@ -20,6 +20,7 @@ var (
 		makeAuthTable,
 		makePostTable,
 		makeCourseTable,
+		makeProjectTable,
 	}
 )
 
