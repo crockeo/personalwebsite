@@ -9,7 +9,7 @@ import (
 
 // The handler to deal with logging into the admin account
 func AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
-	if !Check404(w, r, r.URL.Path[12:]) {
+	if !Check404(w, r, "/admin/login") {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 
@@ -44,7 +44,7 @@ func AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
 
 // Making a new blog post
 func AdminNewBlogPostHandler(w http.ResponseWriter, r *http.Request) {
-	if !Check404(w, r, r.URL.Path[10:]) {
+	if !Check404(w, r, "/admin/new/") {
 		cauth, err := r.Cookie(config.AuthName)
 
 		if err != nil {
@@ -87,7 +87,7 @@ func AdminNewBlogPostHandler(w http.ResponseWriter, r *http.Request) {
 
 // Updating admin information
 func AdminUpdateHandler(w http.ResponseWriter, r *http.Request) {
-	if !Check404(w, r, r.URL.Path[13:]) {
+	if !Check404(w, r, "/admin/update") {
 		cauth, err := r.Cookie(config.AuthName)
 
 		if err != nil {
@@ -137,7 +137,7 @@ func AdminUpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 // Serving the no-no page
 func AdminNonoHandler(w http.ResponseWriter, r *http.Request) {
-	if !Check404(w, r, r.URL.Path[11:]) {
+	if !Check404(w, r, "/admin/nono/") {
 		w.WriteHeader(503)
 		helpers.SendPage(w, "nono", struct{}{})
 	}
@@ -145,7 +145,7 @@ func AdminNonoHandler(w http.ResponseWriter, r *http.Request) {
 
 // The base admin handler
 func AdminHandler(w http.ResponseWriter, r *http.Request) {
-	if !Check404(w, r, r.URL.Path[6:]) {
+	if !Check404(w, r, "/admin/") {
 		cauth, err := r.Cookie(config.AuthName)
 
 		if err != nil {

@@ -34,7 +34,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	if err == nil {
 		postHandler(w, r, int(num))
 	} else {
-		if !Check404(w, r, r.URL.Path[5:]) {
+		if !Check404(w, r, "/blog/") {
 			db, err := database.OpenDefaultDatabase()
 
 			if err != nil {

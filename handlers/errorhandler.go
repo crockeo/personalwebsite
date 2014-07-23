@@ -11,7 +11,7 @@ type Error struct {
 }
 
 func Check404(w http.ResponseWriter, r *http.Request, path string) bool {
-	if path != "/" {
+	if r.URL.Path != path {
 		ErrorHandler(w, r, 404)
 		return true
 	}
@@ -20,8 +20,6 @@ func Check404(w http.ResponseWriter, r *http.Request, path string) bool {
 }
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request, status int) {
-	path := r.URL.Path
-
 	w.WriteHeader(status)
-	helpers.SendPage(w, "error", Error{ErrorCode: status, Path: path})
+	helpers.SendPage(w, "error", Error{ErrorCode: status, Path: r.URL.Path})
 }

@@ -17,6 +17,8 @@ func InitHandlersAndStart() {
 	http.HandleFunc("/admin/update/", AdminUpdateHandler)
 	http.HandleFunc("/admin/nono/", AdminNonoHandler)
 	http.HandleFunc("/admin/", AdminHandler)
+	http.HandleFunc("/project/course/", ProjectCourseHandler)
+	http.HandleFunc("/project/project/", ProjectProjectHandler)
 	http.HandleFunc("/project/", ProjectHandler)
 	http.HandleFunc("/", HomeHandler)
 

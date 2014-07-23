@@ -11,6 +11,16 @@ type projectRootData struct {
 	Projects []*database.Project // The list of projects
 }
 
+// Displaying an individual course
+func ProjectCourseHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
+// Displaying an individual project
+func ProjectProjectHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
 // The base ProjectHandler
 func loadProjectRootData() (*projectRootData, error) {
 	db, err := database.OpenDefaultDatabase()
