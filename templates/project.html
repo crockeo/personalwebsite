@@ -1,0 +1,45 @@
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+		<h2 class="text-center">{{.Data.Title}}</h2>
+		<h4 class="text-center">{{.Data.ShortDesc}}</h4>
+		<h4 class="text-center">
+			<small>Written in {{.Data.Language}}</small>
+		</h4>
+
+		<hr>
+	</div>
+</div>
+
+<h3 class="text-center">Screenshots</h3>
+<div class="row">
+	<div id="imageCarousel" class="col-md-10 col-md-offset-1 carousel slide" data-ride="carousel">
+		<div class="carousel-inner">
+			{{if .Data.FirstScreenshot}}
+				<div class="item active">
+					<img class="carouselImage" src="{{.Data.FirstScreenshot}}" />
+				</div>
+
+				{{range .Data.Screenshots}}
+					<div class="item">
+						<img class="carouselImage" src="{{.}}" />
+					</div>
+				{{end}}
+			{{else}}
+				<div class="item active">
+					<h2 class="text-center whitetext">No screenshots to display</h2>
+				</div>
+			{{end}}
+		</div>
+
+		<a class="left carousel-control" href="#imageCarousel" role="button" data-slide="prev"></a>
+		<a class="right carousel-control" href="#imageCarousel" role="button" data-slide="next"></a>
+	</div>
+</div>
+
+<h3 class="text-center">Description</h3>
+
+<div class="row">
+	<p class="col-md-6 col-md-offset-3 text-justify">
+		{{.Data.Description}}
+	</p>
+</div>

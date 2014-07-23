@@ -37,17 +37,19 @@
 		{{with .Data.Projects}}
 			<table class="table table-striped table-bordered text-center">
 				<thead>
-					<tr>Project Name</tr>
-					<tr>Language</tr>
-					<tr>Short Description</tr>
+					<tr>
+						<td>Project Name</td>
+						<td>Short Description</td>
+						<td>Language</td>
+					</tr>
 				</thead>
 
 				<tbody>
 					{{range .}}
 						<tr>
 							<td><a href="/project/project/{{.Title}}">{{.Title}}</a></td>
-							<td>{{.Language}}</td>
 							<td>{{.ShortDesc}}</td>
+							<td>{{.Language}}</td>
 						</tr>
 					{{end}}
 				</tbody>

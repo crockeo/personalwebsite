@@ -12,6 +12,42 @@ type projectRootData struct {
 	Projects []*database.Project // The list of projects
 }
 
+type DisplayProject struct {
+	Title           string   // The title of the project
+	FirstScreenshot string   // The first screenshot
+	Screenshots     []string // The rest of the screenshots
+	Language        string   // The language the project was written in
+	ShortDesc       string   // A short version of the description
+	Description     string   // A description of the project
+}
+
+func toDisplayProject(project *database.Project) *DisplayProject {
+	var firstscreenshot string
+	var screenshots []string
+
+	if project.Screenshots == nil {
+		firstscreenshot = ""
+		screenshots = nil
+	} else {
+		firstscreenshot = project.Screenshots[0]
+
+		if len(project.Screenshots) > 1 {
+			screenshots = project.Screenshots[1:]
+		} else {
+			screenshots = nil
+		}
+	}
+
+	return &DisplayProject{
+		Title:           project.Title,
+		FirstScreenshot: firstscreenshot,
+		Screenshots:     screenshots,
+		Language:        project.Language,
+		ShortDesc:       project.ShortDesc,
+		Description:     project.Description,
+	}
+}
+
 // Displaying an individual course
 func ProjectCourseHandler(w http.ResponseWriter, r *http.Request) {
 	root := "/project/course/"
@@ -28,10 +64,33 @@ func ProjectCourseHandler(w http.ResponseWriter, r *http.Request) {
 			course, err := database.GetCourseBySerTitle(db, sertitle)
 
 			if err != nil {
-				fmt.Println(err.Error())
 				ErrorHandler(w, r, 404)
 			} else {
 				helpers.SendPage(w, "course", course)
+			}
+		}
+	}
+}
+
+// Displaying an individual project
+func ProjectProjectHandler(w http.ResponseWriter, r *http.Request) {
+	root := "/project/project/"
+	title := r.URL.Path[len(root):]
+
+	if title == "" {
+		ErrorHandler(w, r, 404)
+	} else {
+		db, err := database.OpenDefaultDatabase()
+
+		if err != nil {
+			ErrorHandler(w, r, 503)
+		} else {
+			project, err := database.GetProjectByTitle(db, title)
+
+			if err != nil {
+				ErrorHandler(w, r, 404)
+			} else {
+				helpers.SendPage(w, "project", toDisplayProject(project))
 			}
 		}
 	}
