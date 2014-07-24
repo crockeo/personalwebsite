@@ -4,6 +4,7 @@ import (
 	"github.com/crockeo/personalwebsite/config"
 	"github.com/crockeo/personalwebsite/database"
 	"github.com/crockeo/personalwebsite/handlers"
+	"github.com/go-martini/martini"
 	"os"
 )
 
@@ -27,5 +28,14 @@ func PreRunInit() {
 
 func main() {
 	PreRunInit()
-	handlers.InitHandlersAndStart()
+
+	m := martini.Classic()
+
+	handlers.InitAdminHandlers(m)
+	handlers.InitBlogHandlers(m)
+	handlers.InitErrorHandlers(m)
+	handlers.InitHomeHandlers(m)
+	handlers.InitProjectHandlers(m)
+
+	m.Run()
 }

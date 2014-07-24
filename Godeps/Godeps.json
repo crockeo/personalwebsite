@@ -8,6 +8,16 @@
 			"Rev": "335bcad0b70a3ba61b9951992a418c9176a73fd4"
 		},
 		{
+			"ImportPath": "github.com/codegangsta/inject",
+			"Comment": "v1.0-rc1-4-g4b81725",
+			"Rev": "4b8172520a03fa190f427bbd284db01b459bfce7"
+		},
+		{
+			"ImportPath": "github.com/go-martini/martini",
+			"Comment": "v1.0-27-g6d22115",
+			"Rev": "6d22115736ff94392c11684f7cbe1a5143430ee3"
+		},
+		{
 			"ImportPath": "github.com/lib/pq",
 			"Rev": "026717369ef25a05e0553b40f0711022b5422923"
 		},

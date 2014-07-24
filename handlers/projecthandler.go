@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/crockeo/personalwebsite/database"
 	"github.com/crockeo/personalwebsite/helpers"
+	"github.com/go-martini/martini"
 	"net/http"
 )
 
@@ -49,9 +50,8 @@ func toDisplayProject(project *database.Project) *DisplayProject {
 }
 
 // Displaying an individual course
-func ProjectCourseHandler(w http.ResponseWriter, r *http.Request) {
-	root := "/project/course/"
-	sertitle := r.URL.Path[len(root):]
+func ProjectCourseHandler(w http.ResponseWriter, r *http.Request, params martini.Params) {
+	sertitle := params["name"]
 
 	if sertitle == "" {
 		ErrorHandler(w, r, 404)
@@ -73,9 +73,8 @@ func ProjectCourseHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Displaying an individual project
-func ProjectProjectHandler(w http.ResponseWriter, r *http.Request) {
-	root := "/project/project/"
-	title := r.URL.Path[len(root):]
+func ProjectProjectHandler(w http.ResponseWriter, r *http.Request, params martini.Params) {
+	title := params["name"]
 
 	if title == "" {
 		ErrorHandler(w, r, 404)
@@ -125,16 +124,19 @@ func loadProjectRootData() (*projectRootData, error) {
 }
 
 func ProjectHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/project/" {
-		ErrorHandler(w, r, 404)
-	} else {
-		data, err := loadProjectRootData()
+	data, err := loadProjectRootData()
 
-		if err != nil {
-			fmt.Println(err.Error())
-			ErrorHandler(w, r, 503)
-		} else {
-			helpers.SendPage(w, "projectroot", data)
-		}
+	if err != nil {
+		fmt.Println(err.Error())
+		ErrorHandler(w, r, 503)
+	} else {
+		helpers.SendPage(w, "projectroot", data)
 	}
+}
+
+// Initializing the Project handlers
+func InitProjectHandlers(m *martini.ClassicMartini) {
+	m.Get("/project/course/:name", ProjectCourseHandler)
+	m.Get("/project/project/:name", ProjectProjectHandler)
+	m.Get("/project", ProjectHandler)
 }
