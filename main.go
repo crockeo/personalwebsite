@@ -27,7 +27,7 @@ func PreRunInit() {
 }
 
 func main() {
-	PreRunInit()
+	go PreRunInit()
 
 	m := martini.Classic()
 
