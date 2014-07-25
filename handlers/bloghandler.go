@@ -17,46 +17,34 @@ func PostHandler(w http.ResponseWriter, r *http.Request, params martini.Params) 
 		ErrorHandler(w, r, 404)
 	} else {
 		id := int(id64)
-		db, err := database.OpenDefaultDatabase()
+
+		db := database.QuickOpenDB()
+		defer db.Close()
+
+		post, err := database.GetPost(db, id)
 
 		if err != nil {
-			ErrorHandler(w, r, 503)
+			ErrorHandler(w, r, 404)
 		} else {
-			post, err := database.GetPost(db, id)
-
-			if err != nil {
-				ErrorHandler(w, r, 404)
-			} else {
-				helpers.SendPage(w, "blog", struct{ Posts []template.HTML }{Posts: []template.HTML{post.Display()}})
-			}
+			helpers.SendPage(w, "blog", struct{ Posts []template.HTML }{Posts: []template.HTML{post.Display()}})
 		}
-
-		db.Close()
 	}
 }
 
 // The blog display itself
 func BlogHandler(w http.ResponseWriter, r *http.Request) {
-	db, err := database.OpenDefaultDatabase()
+	posts := database.QuickGetPosts()
 
-	if err != nil {
-		ErrorHandler(w, r, 503)
+	if len(posts) == 0 {
+		helpers.SendPage(w, "noblog", struct{}{})
 	} else {
-		posts, err := database.GetPosts(db)
+		dposts := make([]template.HTML, len(posts))
 
-		if len(posts) == 0 || err != nil {
-			helpers.SendPage(w, "noblog", struct{}{})
-		} else {
-			dposts := make([]template.HTML, len(posts))
-
-			for i := 0; i < len(posts); i++ {
-				dposts[i] = posts[i].Display()
-			}
-
-			helpers.SendPage(w, "blog", struct{ Posts []template.HTML }{Posts: dposts})
+		for i := 0; i < len(posts); i++ {
+			dposts[i] = posts[i].Display()
 		}
 
-		db.Close()
+		helpers.SendPage(w, "blog", struct{ Posts []template.HTML }{Posts: dposts})
 	}
 }
 

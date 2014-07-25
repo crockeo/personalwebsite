@@ -56,18 +56,15 @@ func ProjectCourseHandler(w http.ResponseWriter, r *http.Request, params martini
 	if sertitle == "" {
 		ErrorHandler(w, r, 404)
 	} else {
-		db, err := database.OpenDefaultDatabase()
+		db := database.QuickOpenDB()
+		defer db.Close()
+
+		course, err := database.GetCourseBySerTitle(db, sertitle)
 
 		if err != nil {
-			ErrorHandler(w, r, 503)
+			ErrorHandler(w, r, 404)
 		} else {
-			course, err := database.GetCourseBySerTitle(db, sertitle)
-
-			if err != nil {
-				ErrorHandler(w, r, 404)
-			} else {
-				helpers.SendPage(w, "course", course)
-			}
+			helpers.SendPage(w, "course", course)
 		}
 	}
 }
@@ -79,29 +76,23 @@ func ProjectProjectHandler(w http.ResponseWriter, r *http.Request, params martin
 	if title == "" {
 		ErrorHandler(w, r, 404)
 	} else {
-		db, err := database.OpenDefaultDatabase()
+		db := database.QuickOpenDB()
+		defer db.Close()
+
+		project, err := database.GetProjectByTitle(db, title)
 
 		if err != nil {
-			ErrorHandler(w, r, 503)
+			ErrorHandler(w, r, 404)
 		} else {
-			project, err := database.GetProjectByTitle(db, title)
-
-			if err != nil {
-				ErrorHandler(w, r, 404)
-			} else {
-				helpers.SendPage(w, "project", toDisplayProject(project))
-			}
+			helpers.SendPage(w, "project", toDisplayProject(project))
 		}
+
 	}
 }
 
 // The base ProjectHandler
 func loadProjectRootData() (*projectRootData, error) {
-	db, err := database.OpenDefaultDatabase()
-
-	if err != nil {
-		return nil, err
-	}
+	db := database.QuickOpenDB()
 
 	courses, err := database.GetCourses(db)
 

@@ -11,7 +11,7 @@ import (
 // Functions initialize the project structure
 func PreRunInit() {
 	os.Mkdir(config.DataDirectory, 0775)
-	db, err := database.OpenDefaultDatabase()
+	db, err := database.OpenDB()
 
 	if err != nil {
 		panic(err)
