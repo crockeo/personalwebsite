@@ -100,6 +100,20 @@ func GetAuth(db *sql.DB) (*Auth, error) {
 	}, nil
 }
 
+// Quickly getting the current auth
+func QuickGetAuth() *Auth {
+	db := QuickOpenDB()
+	defer db.Close()
+
+	auth, err := GetAuth(db)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return auth
+}
+
 // Changing the current auth
 func ChangeAuth(db *sql.DB, auth *Auth) error {
 	_, err := db.Exec("DELETE FROM auth")
@@ -115,4 +129,16 @@ func ChangeAuth(db *sql.DB, auth *Auth) error {
 	}
 
 	return nil
+}
+
+// Quickly changing the current auth
+func QuickChangeAuth(auth *Auth) {
+	db := QuickOpenDB()
+	defer db.Close()
+
+	err := ChangeAuth(db, auth)
+
+	if err != nil {
+		panic(err)
+	}
 }

@@ -25,7 +25,7 @@ var (
 )
 
 // Opening a database connection
-func OpenDefaultDatabase() (*sql.DB, error) {
+func OpenDB() (*sql.DB, error) {
 	url := os.Getenv("DATABASE_URL")
 
 	if url == "" {
@@ -33,6 +33,17 @@ func OpenDefaultDatabase() (*sql.DB, error) {
 	} else {
 		return sql.Open("postgres", url)
 	}
+}
+
+// Quickly opening a database connection
+func QuickOpenDB() *sql.DB {
+	db, err := OpenDB()
+
+	if err != nil {
+		panic(err)
+	}
+
+	return db
 }
 
 // Creating the database schema

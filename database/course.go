@@ -58,6 +58,20 @@ func GetCourses(db *sql.DB) ([]*Course, error) {
 	return courses, nil
 }
 
+// Quickly getting all of the courses
+func QuickGetCourses() []*Course {
+	db := QuickOpenDB()
+	defer db.Close()
+
+	courses, err := GetCourses(db)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return courses
+}
+
 // Getting a course by its serialized title
 func GetCourseBySerTitle(db *sql.DB, sertitle string) (*Course, error) {
 	stmt, err := db.Prepare("SELECT * FROM courses WHERE sertitle = $1")
@@ -87,6 +101,20 @@ func GetCourseBySerTitle(db *sql.DB, sertitle string) (*Course, error) {
 	return MakeNewCourse(nsertitle, title, inst, description, comments), nil
 }
 
+// Quickly getting a course by its serialized title
+func QuickGetCourseBySerTitle(sertitle string) *Course {
+	db := QuickOpenDB()
+	defer db.Close()
+
+	course, err := GetCourseBySerTitle(db, sertitle)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return course
+}
+
 // Inserting a course
 func InsertCourse(db *sql.DB, course *Course) error {
 	stmt, err := db.Prepare("INSERT INTO courses(sertitle, title, inst, description, comments) values($1, $2, $3, $4, $5)")
@@ -98,4 +126,16 @@ func InsertCourse(db *sql.DB, course *Course) error {
 	_, err = stmt.Exec(course.SerTitle, course.Title, course.Inst, course.Description, course.Comments)
 
 	return err
+}
+
+// Quickly inserting a course
+func QuickInsertCourse(course *Course) {
+	db := QuickOpenDB()
+	defer db.Close()
+
+	err := InsertCourse(db, course)
+
+	if err != nil {
+		panic(err)
+	}
 }

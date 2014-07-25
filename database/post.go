@@ -99,6 +99,20 @@ func GetPosts(db *sql.DB) ([]*Post, error) {
 	return posts, nil
 }
 
+// Quickly getting every post
+func QuickGetPosts() []*Post {
+	db := QuickOpenDB()
+	defer db.Close()
+
+	posts, err := GetPosts(db)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return posts
+}
+
 // Getting a post based on ID
 func GetPost(db *sql.DB, id int) (*Post, error) {
 	var nid int
@@ -128,6 +142,20 @@ func GetPost(db *sql.DB, id int) (*Post, error) {
 	}, nil
 }
 
+// Quickly getting a post
+func QuickGetPost(id int) *Post {
+	db := QuickOpenDB()
+	defer db.Close()
+
+	post, err := GetPost(db, id)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return post
+}
+
 // Getting the most recent post
 func MostRecent(db *sql.DB) (int, error) {
 	row := db.QueryRow("SELECT id FROM posts ORDER BY id DESC")
@@ -147,6 +175,20 @@ func MostRecent(db *sql.DB) (int, error) {
 	return id, nil
 }
 
+// Quickly getting the most recent post
+func QuickMostRecent() int {
+	db := QuickOpenDB()
+	defer db.Close()
+
+	id, err := MostRecent(db)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return id
+}
+
 // Inserting a post into the database (it should be noted that the ID of
 // the post is ignored, and is left to the SQL database's PRIMARY KEY
 // to auto-increment)
@@ -162,4 +204,16 @@ func InsertPost(db *sql.DB, post *Post) error {
 	}
 
 	return err
+}
+
+// Quickly inserting a post into the database
+func QuickInsertPost(post *Post) {
+	db := QuickOpenDB()
+	defer db.Close()
+
+	err := InsertPost(db, post)
+
+	if err != nil {
+		panic(err)
+	}
 }
