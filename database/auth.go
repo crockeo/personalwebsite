@@ -1,14 +1,14 @@
 package database
 
 import (
-	"database/sql"
 	"errors"
 	"github.com/crockeo/personalwebsite/config"
 	"github.com/crockeo/personalwebsite/helpers"
+	"github.com/jmoiron/sqlx"
 	"net/http"
 )
 
-func makeAuthTable(db *sql.DB) error {
+func makeAuthTable(db *sqlx.DB) error {
 	_, err := db.Exec("CREATE TABLE IF NOT EXISTS auth (id INTEGER NOT NULL PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL)")
 
 	if err != nil {
@@ -80,7 +80,7 @@ func MakeNewAuth(username string, password string) *Auth {
 }
 
 // Getting the current auth
-func GetAuth(db *sql.DB) (*Auth, error) {
+func GetAuth(db *sqlx.DB) (*Auth, error) {
 	row := db.QueryRow("SELECT * FROM auth;")
 
 	if row == nil {
@@ -115,7 +115,7 @@ func QuickGetAuth() *Auth {
 }
 
 // Changing the current auth
-func ChangeAuth(db *sql.DB, auth *Auth) error {
+func ChangeAuth(db *sqlx.DB, auth *Auth) error {
 	_, err := db.Exec("DELETE FROM auth")
 
 	if err != nil {

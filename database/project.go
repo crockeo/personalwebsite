@@ -2,10 +2,11 @@ package database
 
 import (
 	"database/sql"
+	"github.com/jmoiron/sqlx"
 	"strings"
 )
 
-func makeProjectTable(db *sql.DB) error {
+func makeProjectTable(db *sqlx.DB) error {
 	_, err := db.Exec("CREATE TABLE IF NOT EXISTS projects (title TEXT NOT NULL PRIMARY KEY, screenshots TEXT NOT NULL, language TEXT NOT NULL, shortdesc TEXT NOT NULL, description TEXT NOT NULL)")
 
 	return err
@@ -30,7 +31,7 @@ func MakeProject(title string, screenshots []string, language string, shortdesc 
 	}
 }
 
-// Making a list of projects from a sql.Rows object
+// Making a list of projects from a sqlx.Rows object
 func makeProjects(rows *sql.Rows) ([]*Project, error) {
 	projects := make([]*Project, 0)
 	var title string
@@ -53,7 +54,7 @@ func makeProjects(rows *sql.Rows) ([]*Project, error) {
 }
 
 // Getting all of the projects
-func GetProjects(db *sql.DB) ([]*Project, error) {
+func GetProjects(db *sqlx.DB) ([]*Project, error) {
 	rows, err := db.Query("SELECT * FROM projects")
 
 	if err != nil {
@@ -64,7 +65,7 @@ func GetProjects(db *sql.DB) ([]*Project, error) {
 }
 
 // Getting a project by its title
-func GetProjectByTitle(db *sql.DB, title string) (*Project, error) {
+func GetProjectByTitle(db *sqlx.DB, title string) (*Project, error) {
 	stmt, err := db.Prepare("SELECT * FROM projects WHERE title = $1")
 
 	if err != nil {
@@ -98,7 +99,7 @@ func GetProjectByTitle(db *sql.DB, title string) (*Project, error) {
 }
 
 // Querying rows with a 'WHERE' statement
-func queryProjectWithWhere(db *sql.DB, field string, value string) ([]*Project, error) {
+func queryProjectWithWhere(db *sqlx.DB, field string, value string) ([]*Project, error) {
 	stmt, err := db.Prepare("SELECT * FROM projects WHERE $1 = $2")
 
 	if err != nil {
@@ -115,6 +116,6 @@ func queryProjectWithWhere(db *sql.DB, field string, value string) ([]*Project, 
 }
 
 // Querying a project by language
-func QueryProjectByLanguage(db *sql.DB, language string) ([]*Project, error) {
+func QueryProjectByLanguage(db *sqlx.DB, language string) ([]*Project, error) {
 	return queryProjectWithWhere(db, "language", language)
 }

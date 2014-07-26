@@ -1,10 +1,10 @@
 package database
 
 import (
-	"database/sql"
+	"github.com/jmoiron/sqlx"
 )
 
-func makeCourseTable(db *sql.DB) error {
+func makeCourseTable(db *sqlx.DB) error {
 	_, err := db.Exec("CREATE TABLE IF NOT EXISTS courses (sertitle TEXT NOT NULL PRIMARY KEY, title TEXT NOT NULL, inst TEXT NOT NULL, description TEXT NOT NULL, comments TEXT NOT NULL)")
 
 	return err
@@ -30,7 +30,7 @@ func MakeNewCourse(sertitle string, title string, inst string, description strin
 }
 
 // Getting all of the courses
-func GetCourses(db *sql.DB) ([]*Course, error) {
+func GetCourses(db *sqlx.DB) ([]*Course, error) {
 	rows, err := db.Query("SELECT * FROM courses")
 
 	if err != nil {
@@ -73,7 +73,7 @@ func QuickGetCourses() []*Course {
 }
 
 // Getting a course by its serialized title
-func GetCourseBySerTitle(db *sql.DB, sertitle string) (*Course, error) {
+func GetCourseBySerTitle(db *sqlx.DB, sertitle string) (*Course, error) {
 	stmt, err := db.Prepare("SELECT * FROM courses WHERE sertitle = $1")
 
 	if err != nil {
@@ -116,7 +116,7 @@ func QuickGetCourseBySerTitle(sertitle string) *Course {
 }
 
 // Inserting a course
-func InsertCourse(db *sql.DB, course *Course) error {
+func InsertCourse(db *sqlx.DB, course *Course) error {
 	stmt, err := db.Prepare("INSERT INTO courses(sertitle, title, inst, description, comments) values($1, $2, $3, $4, $5)")
 
 	if err != nil {

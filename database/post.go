@@ -1,15 +1,15 @@
 package database
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/crockeo/personalwebsite/helpers"
+	"github.com/jmoiron/sqlx"
 	"html/template"
 	"time"
 )
 
-func makePostTable(db *sql.DB) error {
+func makePostTable(db *sqlx.DB) error {
 	_, err := db.Exec("CREATE TABLE IF NOT EXISTS posts (id INTEGER NOT NULL PRIMARY KEY, title TEXT NOT NULL, author TEXT NOT NULL, body TEXT NOT NULL, written TEXT NOT NULL)")
 
 	return err
@@ -63,7 +63,7 @@ func MakeNewPost(title string, author string, body string) *Post {
 }
 
 // Getting every post
-func GetPosts(db *sql.DB) ([]*Post, error) {
+func GetPosts(db *sqlx.DB) ([]*Post, error) {
 	rows, err := db.Query("SELECT * FROM posts ORDER BY id DESC")
 
 	if err != nil {
@@ -114,7 +114,7 @@ func QuickGetPosts() []*Post {
 }
 
 // Getting a post based on ID
-func GetPost(db *sql.DB, id int) (*Post, error) {
+func GetPost(db *sqlx.DB, id int) (*Post, error) {
 	var nid int
 	var title string
 	var author string
@@ -157,7 +157,7 @@ func QuickGetPost(id int) *Post {
 }
 
 // Getting the most recent post
-func MostRecent(db *sql.DB) (int, error) {
+func MostRecent(db *sqlx.DB) (int, error) {
 	row := db.QueryRow("SELECT id FROM posts ORDER BY id DESC")
 
 	if row == nil {
@@ -192,7 +192,7 @@ func QuickMostRecent() int {
 // Inserting a post into the database (it should be noted that the ID of
 // the post is ignored, and is left to the SQL database's PRIMARY KEY
 // to auto-increment)
-func InsertPost(db *sql.DB, post *Post) error {
+func InsertPost(db *sqlx.DB, post *Post) error {
 	id, err := MostRecent(db)
 
 	exec := "INSERT INTO posts(id, title, author, body, written) values($1, $2, $3, $4, $5)"

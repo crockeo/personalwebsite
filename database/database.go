@@ -1,15 +1,15 @@
 package database
 
 import (
-	"database/sql"
 	"errors"
 	"github.com/crockeo/personalwebsite/config"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
 	"os"
 )
 
-type initFn func(db *sql.DB) error
+type initFn func(db *sqlx.DB) error
 
 var (
 	// An error to desginate that a row doesn't exist
@@ -25,18 +25,18 @@ var (
 )
 
 // Opening a database connection
-func OpenDB() (*sql.DB, error) {
+func OpenDB() (*sqlx.DB, error) {
 	url := os.Getenv("DATABASE_URL")
 
 	if url == "" {
-		return sql.Open("sqlite3", config.DbLoc)
+		return sqlx.Open("sqlite3", config.DbLoc)
 	} else {
-		return sql.Open("postgres", url)
+		return sqlx.Open("postgres", url)
 	}
 }
 
 // Quickly opening a database connection
-func QuickOpenDB() *sql.DB {
+func QuickOpenDB() *sqlx.DB {
 	db, err := OpenDB()
 
 	if err != nil {
@@ -47,7 +47,7 @@ func QuickOpenDB() *sql.DB {
 }
 
 // Creating the database schema
-func CreateDatabaseSchema(db *sql.DB) error {
+func CreateDatabaseSchema(db *sqlx.DB) error {
 	var err error
 	for i := 0; i < len(initFns); i++ {
 		err = initFns[i](db)
