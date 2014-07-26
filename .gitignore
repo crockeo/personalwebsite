@@ -9,7 +9,9 @@ data/
 # Ignoring the .zedstate file (for using zed editor)
 .zedstate
 
-# Ignoring the gin generated bin file
+# Ignoring project-specific compiled files
+personalwebsite
+personalwebsite.*
 gin-bin
 gin-bin.*
 
