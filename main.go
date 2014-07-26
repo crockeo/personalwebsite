@@ -30,12 +30,6 @@ func main() {
 	go PreRunInit()
 
 	m := martini.Classic()
-
-	handlers.InitAdminHandlers(m)
-	handlers.InitBlogHandlers(m)
-	handlers.InitErrorHandlers(m)
-	handlers.InitHomeHandlers(m)
-	handlers.InitProjectHandlers(m)
-
+	handlers.InitHandlers(m)
 	m.Run()
 }
