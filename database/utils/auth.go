@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"github.com/crockeo/personalwebsite/newdatabase"
-	"github.com/crockeo/personalwebsite/newdatabase/schema"
+	"github.com/crockeo/personalwebsite/database"
+	"github.com/crockeo/personalwebsite/database/schema"
 )
 
 // Getting the current auth

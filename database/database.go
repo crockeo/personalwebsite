@@ -1,61 +1,72 @@
 package database
 
 import (
-	"errors"
+	"database/sql"
+	"github.com/coopernurse/gorp"
 	"github.com/crockeo/personalwebsite/config"
-	"github.com/jmoiron/sqlx"
+	"github.com/crockeo/personalwebsite/database/schema"
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
 	"os"
 )
 
-type initFn func(db *sqlx.DB) error
+type DB struct {
+	gorp.DbMap
+}
 
-var (
-	// An error to desginate that a row doesn't exist
-	RowDoesNotExistError error = errors.New("Row does not exist.")
-
-	// The functions to initialize the database schema
-	initFns []initFn = []initFn{
-		makeAuthTable,
-		makePostTable,
-		makeCourseTable,
-		makeProjectTable,
-	}
-)
-
-// Opening a database connection
-func OpenDB() (*sqlx.DB, error) {
+// Opening the database
+func open() (*DB, error) {
 	url := os.Getenv("DATABASE_URL")
 
 	if url == "" {
-		return sqlx.Open("sqlite3", config.DbLoc)
-	} else {
-		return sqlx.Open("postgres", url)
-	}
-}
-
-// Quickly opening a database connection
-func QuickOpenDB() *sqlx.DB {
-	db, err := OpenDB()
-
-	if err != nil {
-		panic(err)
-	}
-
-	return db
-}
-
-// Creating the database schema
-func CreateDatabaseSchema(db *sqlx.DB) error {
-	var err error
-	for i := 0; i < len(initFns); i++ {
-		err = initFns[i](db)
+		db, err := sql.Open("sqlite3", config.DbLoc)
 
 		if err != nil {
-			return err
+			return nil, err
 		}
+
+		return &DB{gorp.DbMap{
+			Db:      db,
+			Dialect: gorp.SqliteDialect{},
+		}}, nil
+	} else {
+		db, err := sql.Open("postgres", url)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return &DB{gorp.DbMap{
+			Db:      db,
+			Dialect: gorp.PostgresDialect{},
+		}}, nil
+	}
+}
+
+// Initializing the database
+func initialize(db *DB) error {
+	db.AddTableWithName(schema.Auth{}, "auths").SetKeys(false, "Username", "Password")
+	db.AddTableWithName(schema.Course{}, "courses").SetKeys(false, "SerTitle")
+	db.AddTableWithName(schema.Post{}, "posts").SetKeys(true, "Id")
+	db.AddTableWithName(schema.Screenshot{}, "screenshots").SetKeys(false, "Title")
+	db.AddTableWithName(schema.Project{}, "projects").SetKeys(false, "Title")
+
+	return db.CreateTablesIfNotExists()
+}
+
+// Opening an initialized database
+func OpenAndInit() (*DB, error) {
+	db, err := open()
+
+	if err != nil {
+		return nil, err
 	}
 
-	return nil
+	err = initialize(db)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
