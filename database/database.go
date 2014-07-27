@@ -48,7 +48,6 @@ func initialize(db *DB) error {
 	db.AddTableWithName(schema.Auth{}, "auths").SetKeys(false, "Username", "Password")
 	db.AddTableWithName(schema.Course{}, "courses").SetKeys(false, "SerTitle")
 	db.AddTableWithName(schema.Post{}, "posts").SetKeys(true, "Id")
-	db.AddTableWithName(schema.Screenshot{}, "screenshots").SetKeys(false, "Title")
 	db.AddTableWithName(schema.Project{}, "projects").SetKeys(false, "Title")
 
 	return db.CreateTablesIfNotExists()
