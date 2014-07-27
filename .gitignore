@@ -3,6 +3,11 @@
 *.dll
 *.sl
 
+# Ignoring database files
+*.db
+*.sqlite3
+*.sqlite3.*
+
 # The data/config folder
 data/
 
