@@ -15,6 +15,6 @@ func Middleware() martini.Handler {
 	}
 
 	return func(w http.ResponseWriter, r *http.Request, c martini.Context) {
-		c.Map(&db)
+		c.Map(db)
 	}
 }
