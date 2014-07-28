@@ -7,7 +7,7 @@ import (
 )
 
 // The Martini handler to use for injecting the database context
-func Middleware() martini.Handler {
+func Injector() martini.Handler {
 	db, err := OpenAndInit()
 
 	if err != nil {
@@ -15,6 +15,6 @@ func Middleware() martini.Handler {
 	}
 
 	return func(w http.ResponseWriter, r *http.Request, c martini.Context) {
-		c.Map(&db)
+		c.Map(db)
 	}
 }
