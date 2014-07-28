@@ -18,6 +18,11 @@
 			"Rev": "6d22115736ff94392c11684f7cbe1a5143430ee3"
 		},
 		{
+			"ImportPath": "github.com/jmoiron/sqlx",
+			"Comment": "sqlx-v1.0-31-g3e4894d",
+			"Rev": "3e4894db4b61f775c3886e377b5820c484e577ab"
+		},
+		{
 			"ImportPath": "github.com/lib/pq",
 			"Rev": "026717369ef25a05e0553b40f0711022b5422923"
 		},
