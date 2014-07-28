@@ -19,3 +19,15 @@ html {
 .toprowcontent:hover {
 	color: #ececec;
 }
+
+.footer-text {
+	color: #bbb;
+}
+
+.footer-text:hover {
+	color: #ccc;
+}
+
+.footer-text:active {
+	color: #ccc;
+}
