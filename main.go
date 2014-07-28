@@ -10,7 +10,7 @@ import (
 func main() {
 	m := martini.Classic()
 
-	m.use(database.Middleware())
+	m.Use(database.Middleware())
 	handlers.InitHandlers(m)
 
 	m.Run()
