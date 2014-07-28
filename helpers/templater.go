@@ -3,7 +3,6 @@ package helpers
 import (
 	"html/template"
 	"io"
-	"log"
 )
 
 const (
@@ -29,7 +28,7 @@ func LoadTemplateUnsafe(name string) *template.Template {
 	temp, err := LoadTemplate(name)
 
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	return temp
@@ -59,26 +58,4 @@ func SendPage(w io.Writer, name string, data interface{}) error {
 	footer.Execute(w, v)
 
 	return nil
-}
-
-// Loading a template to a string
-func RenderPage(name string, data interface{}) (string, error) {
-	sw := NewStringWriter()
-
-	err := SendPage(sw, name, data)
-
-	if err != nil {
-		return "", err
-	}
-
-	return sw.String(), nil
-}
-
-// Unsafely rendering the page
-func RenderPageUnsafe(name string, data interface{}) string {
-	str, err := RenderPage(name, data)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return str
 }
