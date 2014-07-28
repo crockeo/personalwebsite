@@ -64,6 +64,20 @@ func GetProjects(db *sqlx.DB) ([]*Project, error) {
 	return makeProjects(rows)
 }
 
+// Quickly getting all of the projects
+func QuickGetProjects() []*Project {
+	db := QuickOpenDB()
+	defer db.Close()
+
+	projects, err := GetProjects(db)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return projects
+}
+
 // Getting a project by its title
 func GetProjectByTitle(db *sqlx.DB, title string) (*Project, error) {
 	stmt, err := db.Prepare("SELECT * FROM projects WHERE title = $1")
@@ -98,24 +112,44 @@ func GetProjectByTitle(db *sqlx.DB, title string) (*Project, error) {
 	}, nil
 }
 
-// Querying rows with a 'WHERE' statement
-func queryProjectWithWhere(db *sqlx.DB, field string, value string) ([]*Project, error) {
-	stmt, err := db.Prepare("SELECT * FROM projects WHERE $1 = $2")
+// Quickly getting a project by its title
+func QuickGetProjectByTitle(title string) *Project {
+	db := QuickOpenDB()
+	defer db.Close()
+
+	project, err := GetProjectByTitle(db, title)
 
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
-	rows, err := stmt.Query(field, value)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return makeProjects(rows)
+	return project
 }
 
-// Querying a project by language
-func QueryProjectByLanguage(db *sqlx.DB, language string) ([]*Project, error) {
-	return queryProjectWithWhere(db, "language", language)
+// Inserting a post
+func InsertProject(db *sqlx.DB, project *Project) error {
+	var joined string
+	if len(project.Screenshots) == 0 {
+		joined = ""
+	} else {
+		joined = project.Screenshots[0]
+		for i := 1; i < len(project.Screenshots); i++ {
+			joined += "," + project.Screenshots[i]
+		}
+	}
+
+	exec := "INSERT INTO projects(title, screenshots, language, shortdesc, description) values($1, $2, $3, $4, $5)"
+
+	_, err := db.Exec(exec, project.Title, joined, project.Language, project.ShortDesc, project.Description)
+	return err
+}
+
+// Quickly inserting a post
+func QuickInsertProject(project *Project) {
+	db := QuickOpenDB()
+	defer db.Close()
+
+	if err := InsertProject(db, project); err != nil {
+		panic(err)
+	}
 }
