@@ -19,6 +19,3 @@ personalwebsite
 personalwebsite.*
 gin-bin
 gin-bin.*
-
-# The Godeps _workspace folder
-Godeps/_workspace/
