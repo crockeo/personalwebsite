@@ -23,7 +23,7 @@ func ProjectCourseHandler(w http.ResponseWriter, r *http.Request, params martini
 		if err != nil {
 			error.ErrorHandler(w, r, 404)
 		} else {
-			helpers.SendPage(w, "course", course)
+			helpers.SendPage(w, "course", toDisplayCourse(course))
 		}
 	}
 }
