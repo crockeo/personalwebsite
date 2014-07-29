@@ -26,8 +26,13 @@ func PostNewProjectHandler(w http.ResponseWriter, r *http.Request) {
 		shortdesc := r.FormValue("shortdesc")
 		description := r.FormValue("description")
 
-		if title != "" && sscreenshots != "" && language != "" && shortdesc != "" && description != "" {
-			screenshots := strings.Split(sscreenshots, ",")
+		if title != "" && language != "" && shortdesc != "" && description != "" {
+			var screenshots []string
+			if sscreenshots == "" {
+				screenshots = []string{}
+			} else {
+				screenshots = strings.Split(sscreenshots, ",")
+			}
 
 			auth := database.QuickGetAuth()
 			if auth.SecureString() == cauth.Value {
